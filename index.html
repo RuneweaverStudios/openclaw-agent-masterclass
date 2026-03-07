@@ -5,987 +5,1375 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OpenClaw Agent Masterclass — From Zero to Ghost</title>
     <meta name="description" content="Complete guide to setting up an autonomous AI agent with OpenClaw. Learn to build persistent memory, specialized skills, and proactive automation.">
-    <meta name="keywords" content="openclaw, ai agent, autonomous agent, memory systems, skills, automation">
     <meta name="author" content="ghost malone">
-    
-    <!-- Open Graph -->
+
     <meta property="og:title" content="OpenClaw Agent Masterclass">
     <meta property="og:description" content="From Zero to Ghost — Complete setup guide for autonomous AI agents">
     <meta property="og:type" content="website">
-    
-    <!-- Pixel Art Font -->
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
     <style>
         :root {
-            /* Pixel Art Colors - Star Office Style */
-            --bg: #1a1a2e;
-            --bg-light: #16213e;
-            --surface: #0f3460;
-            --surface-light: #1e3a5f;
-            --border: #e94560;
-            --border-alt: #0ea5e9;
-            
-            --text: #eaeaea;
-            --text-dim: #a0a0a0;
-            --text-dimmed: #6b6b6b;
-            
-            /* Accent Colors */
-            --accent-primary: #ffd700;
-            --accent-secondary: #22c55e;
-            --accent-tertiary: #8b5cf6;
-            --accent-warning: #f59e0b;
-            --accent-error: #ef4444;
-            
-            /* Fonts */
-            --font-pixel: 'Press Start 2P', monospace;
-            --font-body: 'Inter', -apple-system, sans-serif;
-            
-            /* Spacing */
-            --space-xs: 0.25rem;
-            --space-sm: 0.5rem;
-            --space-md: 1rem;
-            --space-lg: 1.5rem;
-            --space-xl: 2rem;
-            --space-2xl: 3rem;
-            --space-3xl: 4rem;
+            --bg-abyss: #04060f;
+            --bg-deep: #080c1a;
+            --bg-surface: #0c1225;
+            --bg-card: #101830;
+            --bg-card-hover: #151e3d;
+
+            --glow-cyan: #00e5ff;
+            --glow-magenta: #e040fb;
+            --glow-amber: #ffab00;
+            --glow-green: #00e676;
+            --glow-blue: #448aff;
+            --glow-red: #ff5252;
+
+            --text-primary: #e8eaf6;
+            --text-secondary: #9fa8c7;
+            --text-dim: #5c6484;
+
+            --font-display: 'Syne', sans-serif;
+            --font-body: 'DM Sans', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+
+            --radius: 16px;
+            --radius-sm: 8px;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
 
         body {
             font-family: var(--font-body);
-            background: var(--bg);
-            color: var(--text);
-            line-height: 1.6;
-            font-size: 15px;
-            position: relative;
+            background: var(--bg-abyss);
+            color: var(--text-primary);
+            line-height: 1.65;
             overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* Pixel Grid Background */
-        body::before {
-            content: '';
+        /* ── Ambient Canvas Background ── */
+        #ambient-canvas {
             position: fixed;
             inset: 0;
-            background-image: 
-                linear-gradient(rgba(233, 69, 96, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(233, 69, 96, 0.03) 1px, transparent 1px);
-            background-size: 20px 20px;
-            pointer-events: none;
             z-index: 0;
-        }
-
-        /* Scanline Effect */
-        body::after {
-            content: '';
-            position: fixed;
-            inset: 0;
-            background: repeating-linear-gradient(
-                0deg,
-                rgba(0, 0, 0, 0.1) 0px,
-                rgba(0, 0, 0, 0.1) 1px,
-                transparent 1px,
-                transparent 2px
-            );
             pointer-events: none;
-            z-index: 9999;
-            opacity: 0.3;
         }
 
+        /* ── Utility ── */
         .container {
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
-            padding: 0 var(--space-xl);
+            padding: 0 clamp(1.25rem, 4vw, 3rem);
             position: relative;
             z-index: 1;
         }
 
-        /* Header */
-        header {
-            padding: var(--space-3xl) 0;
+        .glow-text {
+            background: linear-gradient(135deg, var(--glow-cyan), var(--glow-magenta));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .sr-only {
+            position: absolute; width: 1px; height: 1px;
+            padding: 0; margin: -1px; overflow: hidden;
+            clip: rect(0,0,0,0); border: 0;
+        }
+
+        /* ── Hero ── */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
             text-align: center;
+            padding: 6rem 0 4rem;
             position: relative;
         }
 
-        .pixel-border {
-            border: 4px solid var(--border);
-            box-shadow: 
-                4px 4px 0 var(--border),
-                -4px -4px 0 var(--border),
-                4px -4px 0 var(--border),
-                -4px 4px 0 var(--border);
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 1px;
+            height: 120px;
+            background: linear-gradient(to bottom, var(--glow-cyan), transparent);
+            opacity: 0.4;
         }
 
-        .logo {
-            font-family: var(--font-pixel);
-            font-size: 0.75rem;
-            color: var(--accent-primary);
-            text-decoration: none;
-            margin-bottom: var(--space-lg);
-            display: inline-block;
-            padding: var(--space-md) var(--space-lg);
-            background: var(--surface);
-            animation: blink 2s infinite;
-        }
-
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
-        }
-
-        h1 {
-            font-family: var(--font-pixel);
-            font-size: 2rem;
-            font-weight: 400;
-            line-height: 1.3;
-            margin-bottom: var(--space-lg);
-            letter-spacing: 0.05em;
-            color: var(--accent-primary);
-            text-shadow: 4px 4px 0 var(--surface);
-        }
-
-        .subtitle {
-            font-family: var(--font-pixel);
-            font-size: 0.625rem;
-            color: var(--text-dim);
-            margin-bottom: var(--space-xl);
-            letter-spacing: 0.1em;
-        }
-
-        .header-meta {
-            display: flex;
-            justify-content: center;
-            gap: var(--space-xl);
-            font-family: var(--font-pixel);
-            font-size: 0.5rem;
-            color: var(--text-dimmed);
-            flex-wrap: wrap;
-        }
-
-        .header-meta div {
-            display: flex;
-            align-items: center;
-            gap: var(--space-sm);
-            padding: var(--space-sm) var(--space-md);
-            background: var(--surface);
-            border: 2px solid var(--border-alt);
-        }
-
-        /* CTA Buttons */
-        .cta-group {
-            display: flex;
-            justify-content: center;
-            gap: var(--space-md);
-            margin-top: var(--space-2xl);
-            flex-wrap: wrap;
-        }
-
-        .btn {
+        .hero-badge {
             display: inline-flex;
             align-items: center;
-            gap: var(--space-sm);
-            padding: var(--space-md) var(--space-xl);
-            font-family: var(--font-pixel);
-            font-size: 0.5rem;
-            font-weight: 400;
-            text-decoration: none;
-            border: 4px solid var(--border);
-            cursor: pointer;
-            transition: all 0.1s ease;
+            gap: 0.5rem;
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            letter-spacing: 0.15em;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
+            color: var(--glow-cyan);
+            border: 1px solid rgba(0, 229, 255, 0.25);
+            border-radius: 100px;
+            padding: 0.5rem 1.25rem;
+            margin-bottom: 2.5rem;
+            background: rgba(0, 229, 255, 0.05);
+            backdrop-filter: blur(10px);
+            animation: fadeInDown 0.8s ease-out both;
         }
 
-        .btn-primary {
-            background: var(--accent-primary);
-            color: var(--bg);
-            box-shadow: 4px 4px 0 var(--surface);
+        .hero-badge::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--glow-cyan);
+            box-shadow: 0 0 8px var(--glow-cyan);
+            animation: pulse-dot 2s ease-in-out infinite;
         }
 
-        .btn-primary:hover {
-            transform: translate(2px, 2px);
-            box-shadow: 2px 2px 0 var(--surface);
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.8); }
         }
 
-        .btn-primary:active {
-            transform: translate(4px, 4px);
-            box-shadow: none;
+        .hero h1 {
+            font-family: var(--font-display);
+            font-size: clamp(2.8rem, 7vw, 5.5rem);
+            font-weight: 800;
+            line-height: 1.05;
+            letter-spacing: -0.03em;
+            margin-bottom: 1.5rem;
+            animation: fadeInUp 0.8s ease-out 0.15s both;
         }
 
-        .btn-secondary {
-            background: var(--surface);
-            color: var(--text);
-            box-shadow: 4px 4px 0 var(--border-alt);
-        }
-
-        .btn-secondary:hover {
-            border-color: var(--accent-primary);
-            color: var(--accent-primary);
-            transform: translate(2px, 2px);
-            box-shadow: 2px 2px 0 var(--border-alt);
-        }
-
-        /* Stats */
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: var(--space-lg);
-            margin: var(--space-3xl) 0;
-        }
-
-        .stat-card {
-            text-align: center;
-            padding: var(--space-xl);
-            background: var(--surface);
-            border: 4px solid var(--border-alt);
-            box-shadow: 4px 4px 0 var(--border);
-        }
-
-        .stat-number {
-            font-family: var(--font-pixel);
-            font-size: 2.5rem;
-            color: var(--accent-primary);
-            line-height: 1;
-            margin-bottom: var(--space-sm);
-        }
-
-        .stat-label {
-            font-family: var(--font-pixel);
-            font-size: 0.5rem;
-            color: var(--text-dim);
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-        }
-
-        /* Section structure */
-        section {
-            margin-bottom: var(--space-3xl);
-        }
-
-        .section-label {
-            display: inline-flex;
-            align-items: center;
-            gap: var(--space-sm);
-            font-family: var(--font-pixel);
-            font-size: 0.5rem;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: var(--accent-primary);
-            margin-bottom: var(--space-lg);
-            padding: var(--space-sm) var(--space-md);
-            background: var(--surface);
-            border: 2px solid var(--border);
-        }
-
-        .section-label::before {
-            content: '>';
-            animation: blink 1s infinite;
-        }
-
-        .section-title {
-            font-family: var(--font-pixel);
-            font-size: 1.25rem;
-            margin-bottom: var(--space-lg);
-            letter-spacing: 0.05em;
-            color: var(--accent-primary);
-        }
-
-        .section-description {
-            font-size: 1rem;
-            color: var(--text-dim);
-            max-width: 800px;
-            margin-bottom: var(--space-xl);
-            line-height: 1.8;
-        }
-
-        /* Phase cards */
-        .phase-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: var(--space-lg);
-        }
-
-        .phase-card {
-            background: var(--surface);
-            border: 4px solid var(--border-alt);
-            padding: var(--space-xl);
-            position: relative;
-            box-shadow: 4px 4px 0 var(--border);
-            transition: all 0.1s ease;
-        }
-
-        .phase-card:hover {
-            transform: translate(2px, 2px);
-            box-shadow: 2px 2px 0 var(--border);
-            border-color: var(--accent-primary);
-        }
-
-        .phase-number {
-            position: absolute;
-            top: var(--space-md);
-            right: var(--space-md);
-            font-family: var(--font-pixel);
-            font-size: 0.5rem;
-            color: var(--text-dimmed);
-        }
-
-        .phase-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: start;
-            margin-bottom: var(--space-md);
-            gap: var(--space-md);
-        }
-
-        .phase-title {
-            font-family: var(--font-pixel);
-            font-size: 0.625rem;
-            color: var(--accent-primary);
-        }
-
-        .phase-duration {
-            font-family: var(--font-pixel);
-            font-size: 0.5rem;
-            padding: var(--space-xs) var(--space-sm);
-            background: var(--accent-secondary);
-            color: var(--bg);
-        }
-
-        .phase-description {
-            color: var(--text-dim);
-            margin-bottom: var(--space-md);
-            font-size: 0.875rem;
-        }
-
-        .phase-content {
-            font-size: 0.8125rem;
-            color: var(--text-dim);
-        }
-
-        .phase-content ul {
-            list-style: none;
-            margin-top: var(--space-sm);
-        }
-
-        .phase-content li {
-            padding: var(--space-xs) 0;
-            padding-left: var(--space-lg);
-            position: relative;
-        }
-
-        .phase-content li::before {
-            content: '>';
-            position: absolute;
-            left: 0;
-            color: var(--border);
-            font-family: var(--font-pixel);
-            font-size: 0.625rem;
-        }
-
-        /* Features */
-        .feature-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: var(--space-lg);
-        }
-
-        .feature-card {
-            padding: var(--space-xl);
-            background: var(--surface);
-            border: 4px solid var(--border-alt);
-            text-align: center;
-            box-shadow: 4px 4px 0 var(--border);
-        }
-
-        .feature-icon {
-            font-size: 3rem;
-            margin-bottom: var(--space-md);
+        .hero h1 span {
             display: block;
         }
 
-        .feature-title {
-            font-family: var(--font-pixel);
-            font-size: 0.625rem;
-            margin-bottom: var(--space-sm);
-            color: var(--accent-primary);
+        .hero-sub {
+            font-size: clamp(1rem, 2vw, 1.25rem);
+            color: var(--text-secondary);
+            max-width: 560px;
+            margin: 0 auto 3rem;
+            font-weight: 300;
+            animation: fadeInUp 0.8s ease-out 0.3s both;
         }
 
-        .feature-description {
+        .hero-actions {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            animation: fadeInUp 0.8s ease-out 0.45s both;
+        }
+
+        /* ── Buttons ── */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.875rem 2rem;
+            border-radius: var(--radius-sm);
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            letter-spacing: 0.01em;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--glow-cyan), var(--glow-blue));
+            color: var(--bg-abyss);
+            box-shadow: 0 4px 24px rgba(0, 229, 255, 0.25);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px rgba(0, 229, 255, 0.35);
+        }
+
+        .btn-ghost {
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--text-primary);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-ghost:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* ── Stats Ribbon ── */
+        .stats-ribbon {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1px;
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: var(--radius);
+            overflow: hidden;
+            margin: 0 0 8rem;
+        }
+
+        .stat-cell {
+            padding: 2.5rem 1.5rem;
+            text-align: center;
+            background: var(--bg-deep);
+            transition: background 0.3s;
+        }
+
+        .stat-cell:hover {
+            background: var(--bg-surface);
+        }
+
+        .stat-value {
+            font-family: var(--font-display);
+            font-size: 2.5rem;
+            font-weight: 800;
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-cell:nth-child(1) .stat-value { color: var(--glow-cyan); }
+        .stat-cell:nth-child(2) .stat-value { color: var(--glow-magenta); }
+        .stat-cell:nth-child(3) .stat-value { color: var(--glow-amber); }
+        .stat-cell:nth-child(4) .stat-value { color: var(--glow-green); }
+
+        .stat-label {
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
             color: var(--text-dim);
-            font-size: 0.8125rem;
         }
 
-        /* Footer */
+        /* ── Section Headers ── */
+        .section-header {
+            margin-bottom: 3.5rem;
+        }
+
+        .section-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            padding: 0.375rem 0.875rem;
+            border-radius: 100px;
+        }
+
+        .section-title {
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+            margin-bottom: 1rem;
+        }
+
+        .section-desc {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            font-weight: 300;
+        }
+
+        /* ── Phases / Timeline ── */
+        .phases-section {
+            padding: 4rem 0 6rem;
+        }
+
+        .timeline {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 28px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(
+                to bottom,
+                var(--glow-cyan),
+                var(--glow-magenta),
+                var(--glow-amber),
+                var(--glow-green),
+                var(--glow-blue),
+                var(--glow-red)
+            );
+            opacity: 0.2;
+            border-radius: 1px;
+        }
+
+        .phase-item {
+            display: grid;
+            grid-template-columns: 58px 1fr;
+            gap: 1.5rem;
+            align-items: start;
+        }
+
+        .phase-marker {
+            width: 58px;
+            height: 58px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-display);
+            font-weight: 800;
+            font-size: 1.1rem;
+            position: relative;
+            z-index: 1;
+            flex-shrink: 0;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .phase-item:hover .phase-marker {
+            transform: scale(1.1);
+        }
+
+        .phase-item:nth-child(1) .phase-marker {
+            background: rgba(0, 229, 255, 0.12);
+            color: var(--glow-cyan);
+            border: 2px solid rgba(0, 229, 255, 0.3);
+            box-shadow: 0 0 20px rgba(0, 229, 255, 0.1);
+        }
+        .phase-item:nth-child(2) .phase-marker {
+            background: rgba(224, 64, 251, 0.12);
+            color: var(--glow-magenta);
+            border: 2px solid rgba(224, 64, 251, 0.3);
+            box-shadow: 0 0 20px rgba(224, 64, 251, 0.1);
+        }
+        .phase-item:nth-child(3) .phase-marker {
+            background: rgba(255, 171, 0, 0.12);
+            color: var(--glow-amber);
+            border: 2px solid rgba(255, 171, 0, 0.3);
+            box-shadow: 0 0 20px rgba(255, 171, 0, 0.1);
+        }
+        .phase-item:nth-child(4) .phase-marker {
+            background: rgba(0, 230, 118, 0.12);
+            color: var(--glow-green);
+            border: 2px solid rgba(0, 230, 118, 0.3);
+            box-shadow: 0 0 20px rgba(0, 230, 118, 0.1);
+        }
+        .phase-item:nth-child(5) .phase-marker {
+            background: rgba(68, 138, 255, 0.12);
+            color: var(--glow-blue);
+            border: 2px solid rgba(68, 138, 255, 0.3);
+            box-shadow: 0 0 20px rgba(68, 138, 255, 0.1);
+        }
+        .phase-item:nth-child(6) .phase-marker {
+            background: rgba(255, 82, 82, 0.12);
+            color: var(--glow-red);
+            border: 2px solid rgba(255, 82, 82, 0.3);
+            box-shadow: 0 0 20px rgba(255, 82, 82, 0.1);
+        }
+
+        .phase-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius);
+            padding: 2rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .phase-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: var(--radius);
+            padding: 1px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.08), transparent 50%);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+
+        .phase-card:hover {
+            background: var(--bg-card-hover);
+            transform: translateX(4px);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .phase-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .phase-name {
+            font-family: var(--font-display);
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+        }
+
+        .phase-time {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            letter-spacing: 0.05em;
+            padding: 0.25rem 0.75rem;
+            border-radius: 100px;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .phase-item:nth-child(1) .phase-time { background: rgba(0,229,255,0.1); color: var(--glow-cyan); }
+        .phase-item:nth-child(2) .phase-time { background: rgba(224,64,251,0.1); color: var(--glow-magenta); }
+        .phase-item:nth-child(3) .phase-time { background: rgba(255,171,0,0.1); color: var(--glow-amber); }
+        .phase-item:nth-child(4) .phase-time { background: rgba(0,230,118,0.1); color: var(--glow-green); }
+        .phase-item:nth-child(5) .phase-time { background: rgba(68,138,255,0.1); color: var(--glow-blue); }
+        .phase-item:nth-child(6) .phase-time { background: rgba(255,82,82,0.1); color: var(--glow-red); }
+
+        .phase-desc {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 1.25rem;
+            font-weight: 300;
+        }
+
+        .phase-files {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .file-tag {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            padding: 0.3rem 0.7rem;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            color: var(--text-secondary);
+            transition: all 0.2s;
+        }
+
+        .file-tag:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.12);
+        }
+
+        /* ── Office Visualization ── */
+        .office-section {
+            padding: 4rem 0 6rem;
+        }
+
+        .office-viz {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        .office-zone {
+            position: relative;
+            padding: 2.5rem 2rem;
+            border-radius: var(--radius);
+            text-align: center;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: default;
+        }
+
+        .office-zone::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: var(--radius);
+            padding: 1px;
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+
+        .office-zone:hover {
+            transform: translateY(-4px);
+        }
+
+        .zone-rest {
+            background: linear-gradient(135deg, rgba(0,229,255,0.06), rgba(0,229,255,0.02));
+            border: 1px solid rgba(0,229,255,0.12);
+        }
+        .zone-rest:hover { box-shadow: 0 12px 40px rgba(0,229,255,0.1); }
+        .zone-rest .zone-icon { filter: drop-shadow(0 0 12px rgba(0,229,255,0.4)); }
+
+        .zone-work {
+            background: linear-gradient(135deg, rgba(224,64,251,0.06), rgba(224,64,251,0.02));
+            border: 1px solid rgba(224,64,251,0.12);
+        }
+        .zone-work:hover { box-shadow: 0 12px 40px rgba(224,64,251,0.1); }
+        .zone-work .zone-icon { filter: drop-shadow(0 0 12px rgba(224,64,251,0.4)); }
+
+        .zone-debug {
+            background: linear-gradient(135deg, rgba(255,171,0,0.06), rgba(255,171,0,0.02));
+            border: 1px solid rgba(255,171,0,0.12);
+        }
+        .zone-debug:hover { box-shadow: 0 12px 40px rgba(255,171,0,0.1); }
+        .zone-debug .zone-icon { filter: drop-shadow(0 0 12px rgba(255,171,0,0.4)); }
+
+        .zone-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+            transition: transform 0.3s;
+        }
+
+        .office-zone:hover .zone-icon {
+            transform: scale(1.15);
+        }
+
+        .zone-name {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 1rem;
+            margin-bottom: 0.35rem;
+        }
+
+        .zone-rest .zone-name { color: var(--glow-cyan); }
+        .zone-work .zone-name { color: var(--glow-magenta); }
+        .zone-debug .zone-name { color: var(--glow-amber); }
+
+        .zone-desc {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            font-weight: 300;
+        }
+
+        /* ── Features Grid ── */
+        .features-section {
+            padding: 4rem 0 6rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+
+        .feature-card {
+            padding: 2.25rem;
+            border-radius: var(--radius);
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .feature-card:hover {
+            background: var(--bg-card-hover);
+            transform: translateY(-3px);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .feature-card:hover::after { opacity: 1; }
+
+        .feature-card:nth-child(1)::after { background: linear-gradient(90deg, var(--glow-cyan), transparent); }
+        .feature-card:nth-child(2)::after { background: linear-gradient(90deg, var(--glow-magenta), transparent); }
+        .feature-card:nth-child(3)::after { background: linear-gradient(90deg, var(--glow-amber), transparent); }
+        .feature-card:nth-child(4)::after { background: linear-gradient(90deg, var(--glow-green), transparent); }
+        .feature-card:nth-child(5)::after { background: linear-gradient(90deg, var(--glow-blue), transparent); }
+        .feature-card:nth-child(6)::after { background: linear-gradient(90deg, var(--glow-red), transparent); }
+
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .feature-card:nth-child(1) .feature-icon { background: rgba(0,229,255,0.1); }
+        .feature-card:nth-child(2) .feature-icon { background: rgba(224,64,251,0.1); }
+        .feature-card:nth-child(3) .feature-icon { background: rgba(255,171,0,0.1); }
+        .feature-card:nth-child(4) .feature-icon { background: rgba(0,230,118,0.1); }
+        .feature-card:nth-child(5) .feature-icon { background: rgba(68,138,255,0.1); }
+        .feature-card:nth-child(6) .feature-icon { background: rgba(255,82,82,0.1); }
+
+        .feature-title {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 1.05rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-text {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            font-weight: 300;
+            line-height: 1.6;
+        }
+
+        /* ── Quick Start ── */
+        .quickstart-section {
+            padding: 4rem 0 6rem;
+        }
+
+        .quickstart-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        .qs-card {
+            padding: 2rem;
+            border-radius: var(--radius);
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .qs-step {
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--glow-cyan);
+            margin-bottom: 0.75rem;
+        }
+
+        .qs-title {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+
+        .qs-code {
+            background: var(--bg-abyss);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: var(--radius-sm);
+            padding: 1.25rem;
+            font-family: var(--font-mono);
+            font-size: 0.78rem;
+            line-height: 1.8;
+            color: var(--text-secondary);
+            overflow-x: auto;
+        }
+
+        .qs-code .cmd { color: var(--glow-cyan); }
+        .qs-code .comment { color: var(--text-dim); }
+        .qs-code .string { color: var(--glow-green); }
+
+        .qs-text {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            font-weight: 300;
+        }
+
+        .qs-list {
+            list-style: none;
+            margin-top: 0.75rem;
+        }
+
+        .qs-list li {
+            padding: 0.4rem 0;
+            padding-left: 1.25rem;
+            position: relative;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .qs-list li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            transform: translateY(-50%);
+            background: var(--glow-cyan);
+            opacity: 0.5;
+        }
+
+        /* ── Resources ── */
+        .resources-section {
+            padding: 4rem 0 6rem;
+        }
+
+        .resources-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+
+        .resource-card {
+            padding: 2rem;
+            border-radius: var(--radius);
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s;
+        }
+
+        .resource-card:hover {
+            background: var(--bg-card-hover);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .resource-title {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .resource-links {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        .resource-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: color 0.2s;
+        }
+
+        .resource-links a::before {
+            content: '';
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: var(--glow-cyan);
+            opacity: 0.4;
+            transition: opacity 0.2s;
+        }
+
+        .resource-links a:hover {
+            color: var(--glow-cyan);
+        }
+
+        .resource-links a:hover::before {
+            opacity: 1;
+        }
+
+        /* ── Footer ── */
         footer {
-            margin-top: var(--space-3xl);
-            padding: var(--space-3xl) 0;
-            border-top: 4px solid var(--border);
+            padding: 4rem 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
             text-align: center;
         }
 
-        .footer-content {
-            max-width: 600px;
-            margin: 0 auto;
+        .footer-brand {
+            font-family: var(--font-display);
+            font-weight: 800;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            letter-spacing: -0.01em;
         }
 
-        .footer-logo {
-            font-family: var(--font-pixel);
-            font-size: 0.75rem;
-            margin-bottom: var(--space-lg);
-            color: var(--accent-primary);
-        }
-
-        .footer-text {
+        .footer-quote {
             color: var(--text-dim);
-            margin-bottom: var(--space-xl);
-            font-size: 0.875rem;
+            font-style: italic;
+            font-weight: 300;
+            font-size: 0.95rem;
+            margin-bottom: 2rem;
         }
 
         .footer-links {
             display: flex;
             justify-content: center;
-            gap: var(--space-xl);
+            gap: 2rem;
             flex-wrap: wrap;
-            margin-bottom: var(--space-xl);
+            margin-bottom: 2rem;
         }
 
         .footer-links a {
             color: var(--text-dim);
             text-decoration: none;
-            font-size: 0.8125rem;
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
             transition: color 0.2s;
-            font-family: var(--font-pixel);
-            font-size: 0.5rem;
         }
 
         .footer-links a:hover {
-            color: var(--accent-primary);
+            color: var(--text-primary);
         }
 
         .footer-meta {
-            font-family: var(--font-pixel);
-            font-size: 0.5rem;
-            color: var(--text-dimmed);
-        }
-
-        /* Code blocks */
-        pre {
-            background: var(--bg-light);
-            border: 2px solid var(--border-alt);
-            padding: var(--space-lg);
-            margin: var(--space-md) 0;
-            overflow-x: auto;
-            font-family: var(--font-pixel);
-            font-size: 0.5rem;
-            line-height: 1.8;
-        }
-
-        code {
-            font-family: var(--font-pixel);
-            background: var(--surface);
-            padding: 0.125rem 0.375rem;
-            border: 1px solid var(--border-alt);
-            font-size: 0.5rem;
-        }
-
-        /* Office Preview */
-        .office-preview {
-            margin: var(--space-2xl) 0;
-            padding: var(--space-xl);
-            background: var(--surface);
-            border: 4px solid var(--border);
-            text-align: center;
-        }
-
-        .office-preview-title {
-            font-family: var(--font-pixel);
-            font-size: 0.625rem;
-            color: var(--accent-primary);
-            margin-bottom: var(--space-lg);
-        }
-
-        .office-states {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: var(--space-lg);
-            margin-top: var(--space-lg);
-        }
-
-        .office-state {
-            padding: var(--space-lg);
-            background: var(--bg);
-            border: 2px solid var(--border-alt);
-        }
-
-        .office-state-icon {
-            font-size: 2.5rem;
-            margin-bottom: var(--space-sm);
-        }
-
-        .office-state-name {
-            font-family: var(--font-pixel);
-            font-size: 0.5rem;
-            color: var(--accent-primary);
-            margin-bottom: var(--space-xs);
-        }
-
-        .office-state-desc {
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             color: var(--text-dim);
+            font-weight: 300;
         }
 
-        /* Responsive */
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 1.25rem;
-            }
-
-            .subtitle {
-                font-size: 0.5rem;
-            }
-
-            .section-title {
-                font-size: 1rem;
-            }
-
-            .header-meta {
-                flex-direction: column;
-                gap: var(--space-sm);
-                align-items: center;
-            }
-
-            .cta-group {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .btn {
-                width: 100%;
-                max-width: 320px;
-                justify-content: center;
-            }
-
-            .office-states {
-                grid-template-columns: 1fr;
-            }
+        .footer-meta span {
+            opacity: 0.3;
+            margin: 0 0.5rem;
         }
 
-        /* Glitch Effect */
-        @keyframes glitch {
-            0% { transform: translate(0); }
-            20% { transform: translate(-2px, 2px); }
-            40% { transform: translate(-2px, -2px); }
-            60% { transform: translate(2px, 2px); }
-            80% { transform: translate(2px, -2px); }
-            100% { transform: translate(0); }
+        /* ── Animations ── */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .glitch:hover {
-            animation: glitch 0.3s ease infinite;
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1),
+                        transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reveal-stagger > * {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+                        transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .reveal-stagger.visible > * {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reveal-stagger.visible > *:nth-child(1) { transition-delay: 0s; }
+        .reveal-stagger.visible > *:nth-child(2) { transition-delay: 0.08s; }
+        .reveal-stagger.visible > *:nth-child(3) { transition-delay: 0.16s; }
+        .reveal-stagger.visible > *:nth-child(4) { transition-delay: 0.24s; }
+        .reveal-stagger.visible > *:nth-child(5) { transition-delay: 0.32s; }
+        .reveal-stagger.visible > *:nth-child(6) { transition-delay: 0.40s; }
+
+        /* ── Responsive ── */
+        @media (max-width: 900px) {
+            .stats-ribbon { grid-template-columns: repeat(2, 1fr); }
+            .features-grid { grid-template-columns: repeat(2, 1fr); }
+            .resources-grid { grid-template-columns: 1fr; }
+            .quickstart-grid { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 640px) {
+            .stats-ribbon { grid-template-columns: 1fr; margin-bottom: 4rem; }
+            .features-grid { grid-template-columns: 1fr; }
+            .office-viz { grid-template-columns: 1fr; }
+
+            .timeline::before { left: 20px; }
+            .phase-item { grid-template-columns: 42px 1fr; gap: 1rem; }
+            .phase-marker { width: 42px; height: 42px; font-size: 0.9rem; }
+            .phase-card { padding: 1.5rem; }
+
+            .hero-actions { flex-direction: column; align-items: center; }
+            .btn { width: 100%; max-width: 320px; justify-content: center; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <a href="/" class="logo pixel-border glitch">> OPENCLAW_</a>
-            <h1>AGENT MASTERCLASS</h1>
-            <p class="subtitle">FROM ZERO TO GHOST — COMPLETE SETUP GUIDE</p>
-            
-            <div class="header-meta">
-                <div>> DURATION: 2-3 HRS</div>
-                <div>> DIFFICULTY: INTERMEDIATE</div>
-                <div>> PREREQUISITES: OPENCLAW INSTALLED</div>
-            </div>
 
-            <div class="cta-group">
-                <a href="#phases" class="btn btn-primary">
-                    > GET STARTED
-                </a>
-                <a href="https://github.com/RuneweaverStudios/openclaw-agent-masterclass" class="btn btn-secondary">
-                    > VIEW ON GITHUB
-                </a>
-                <a href="GUIDE.md" class="btn btn-secondary">
-                    > READ FULL GUIDE
-                </a>
-            </div>
-        </header>
+<canvas id="ambient-canvas"></canvas>
 
-        <!-- Stats -->
-        <div class="stats">
-            <div class="stat-card">
-                <div class="stat-number">6</div>
-                <div class="stat-label">Config Files</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">3</div>
-                <div class="stat-label">Memory Systems</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">12+</div>
-                <div class="stat-label">Skills</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">∞</div>
-                <div class="stat-label">Possibilities</div>
-            </div>
+<div class="container">
+
+    <!-- ═══════════ HERO ═══════════ -->
+    <section class="hero">
+        <div class="hero-badge">openclaw masterclass</div>
+        <h1>
+            <span>From Zero</span>
+            <span class="glow-text">to Ghost</span>
+        </h1>
+        <p class="hero-sub">
+            Transform a fresh OpenClaw installation into an autonomous AI agent
+            with persistent memory, specialized skills, and proactive automation.
+        </p>
+        <div class="hero-actions">
+            <a href="#phases" class="btn btn-primary">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                Begin Masterclass
+            </a>
+            <a href="https://github.com/RuneweaverStudios/openclaw-agent-masterclass" class="btn btn-ghost">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                View on GitHub
+            </a>
+            <a href="GUIDE.md" class="btn btn-ghost">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                Full Guide
+            </a>
         </div>
+    </section>
 
-        <!-- Office Preview -->
-        <div class="office-preview">
-            <div class="office-preview-title">> OFFICE STATE VISUALIZATION</div>
-            <p style="color: var(--text-dim); font-size: 0.875rem;">
-                Your agent's office shows real-time status with pixel art characters
-            </p>
-            
-            <div class="office-states">
-                <div class="office-state">
-                    <div class="office-state-icon">🛋</div>
-                    <div class="office-state-name">REST AREA</div>
-                    <div class="office-state-desc">Agent is idle and waiting</div>
-                </div>
-                <div class="office-state">
-                    <div class="office-state-icon">💻</div>
-                    <div class="office-state-name">WORK AREA</div>
-                    <div class="office-state-desc">Writing, researching, executing</div>
-                </div>
-                <div class="office-state">
-                    <div class="office-state-icon">🐛</div>
-                    <div class="office-state-name">BUG AREA</div>
-                    <div class="office-state-desc">Error encountered, debugging</div>
-                </div>
-            </div>
+    <!-- ═══════════ STATS ═══════════ -->
+    <div class="stats-ribbon reveal">
+        <div class="stat-cell">
+            <div class="stat-value">6</div>
+            <div class="stat-label">Config Files</div>
         </div>
-
-        <!-- Introduction -->
-        <section>
-            <div class="section-label">INTRODUCTION</div>
-            <h2 class="section-title">> BUILD AN AUTONOMOUS AI AGENT</h2>
-            <p class="section-description">
-                This masterclass teaches you how to transform a fresh OpenClaw installation into 
-                an autonomous AI agent with persistent memory, specialized skills, and proactive 
-                automation capabilities. By the end, you'll have an agent that can remember 
-                everything, execute complex tasks, and operate proactively — just like 
-                <strong style="color: var(--accent-primary);">ghost malone</strong>.
-            </p>
-        </section>
-
-        <!-- Phases -->
-        <section id="phases">
-            <div class="section-label">MASTERCLASS PHASES</div>
-            <h2 class="section-title">> WHAT YOU'LL LEARN</h2>
-            
-            <div class="phase-grid">
-                <div class="phase-card">
-                    <div class="phase-number">01</div>
-                    <div class="phase-header">
-                        <div class="phase-title">IDENTITY & PERSONALITY</div>
-                        <span class="phase-duration">15 MIN</span>
-                    </div>
-                    <div class="phase-description">
-                        Define who your agent is and how it behaves
-                    </div>
-                    <div class="phase-content">
-                        <ul>
-                            <li>IDENTITY.md — Name, type, vibe</li>
-                            <li>SOUL.md — Personality & values</li>
-                            <li>USER.md — Human context</li>
-                            <li>AGENTS.md — Session rules</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="phase-card">
-                    <div class="phase-number">02</div>
-                    <div class="phase-header">
-                        <div class="phase-title">MEMORY SYSTEMS</div>
-                        <span class="phase-duration">30 MIN</span>
-                    </div>
-                    <div class="phase-description">
-                        Build persistent memory that survives sessions
-                    </div>
-                    <div class="phase-content">
-                        <ul>
-                            <li>MEMORY.md — Long-term memory</li>
-                            <li>Daily logs — Session notes</li>
-                            <li>Brain (Supabase) — Semantic memory</li>
-                            <li>Smart Compact — Auto management</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="phase-card">
-                    <div class="phase-number">03</div>
-                    <div class="phase-header">
-                        <div class="phase-title">SKILLS INSTALLATION</div>
-                        <span class="phase-duration">45 MIN</span>
-                    </div>
-                    <div class="phase-description">
-                        Install specialized capabilities from ClawHub
-                    </div>
-                    <div class="phase-content">
-                        <ul>
-                            <li>Essential skills (brain, smart-compact)</li>
-                            <li>Content skills (charlie, thread-writer)</li>
-                            <li>Automation skills (playwright-pro)</li>
-                            <li>Research skills (grok-fast, askvault)</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="phase-card">
-                    <div class="phase-number">04</div>
-                    <div class="phase-header">
-                        <div class="phase-title">AUTOMATION SETUP</div>
-                        <span class="phase-duration">20 MIN</span>
-                    </div>
-                    <div class="phase-description">
-                        Enable proactive behavior with heartbeats & cron
-                    </div>
-                    <div class="phase-content">
-                        <ul>
-                            <li>HEARTBEAT.md — Proactive checks</li>
-                            <li>Cron jobs — Scheduled tasks</li>
-                            <li>LaunchAgent — macOS automation</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="phase-card">
-                    <div class="phase-number">05</div>
-                    <div class="phase-header">
-                        <div class="phase-title">TOOL INTEGRATION</div>
-                        <span class="phase-duration">30 MIN</span>
-                    </div>
-                    <div class="phase-description">
-                        Connect external tools and APIs
-                    </div>
-                    <div class="phase-content">
-                        <ul>
-                            <li>gog CLI — Google services</li>
-                            <li>Postiz MCP — Social media</li>
-                            <li>Supabase — Database</li>
-                            <li>Stripe — Payments</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="phase-card">
-                    <div class="phase-number">06</div>
-                    <div class="phase-header">
-                        <div class="phase-title">TESTING & VERIFICATION</div>
-                        <span class="phase-duration">15 MIN</span>
-                    </div>
-                    <div class="phase-description">
-                        Verify everything works correctly
-                    </div>
-                    <div class="phase-content">
-                        <ul>
-                            <li>Verification checklist (17 items)</li>
-                            <li>Test commands for each system</li>
-                            <li>Troubleshooting guide</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- What You Get -->
-        <section>
-            <div class="section-label">RESULT</div>
-            <h2 class="section-title">> WHAT YOU'LL HAVE</h2>
-            
-            <div class="feature-grid">
-                <div class="feature-card">
-                    <span class="feature-icon">🧠</span>
-                    <div class="feature-title">PERSISTENT MEMORY</div>
-                    <div class="feature-description">
-                        Your agent remembers everything across sessions with semantic search
-                    </div>
-                </div>
-
-                <div class="feature-card">
-                    <span class="feature-icon">🎨</span>
-                    <div class="feature-title">SPECIALIZED SKILLS</div>
-                    <div class="feature-description">
-                        Browser automation, video generation, marketing, and research tools
-                    </div>
-                </div>
-
-                <div class="feature-card">
-                    <span class="feature-icon">⚡</span>
-                    <div class="feature-title">PROACTIVE AUTOMATION</div>
-                    <div class="feature-description">
-                        Heartbeats and cron jobs that run automatically
-                    </div>
-                </div>
-
-                <div class="feature-card">
-                    <span class="feature-icon">🔗</span>
-                    <div class="feature-title">TOOL INTEGRATION</div>
-                    <div class="feature-description">
-                        Gmail, Calendar, social media, databases, and payments
-                    </div>
-                </div>
-
-                <div class="feature-card">
-                    <span class="feature-icon">🔒</span>
-                    <div class="feature-title">SECURE & PRIVATE</div>
-                    <div class="feature-description">
-                        Your data stays on your machine or in your own cloud
-                    </div>
-                </div>
-
-                <div class="feature-card">
-                    <span class="feature-icon">🚀</span>
-                    <div class="feature-title">PRODUCTION READY</div>
-                    <div class="feature-description">
-                        Battle-tested patterns from real-world usage
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Quick Start -->
-        <section>
-            <div class="section-label">QUICK START</div>
-            <h2 class="section-title">> GET STARTED NOW</h2>
-            
-            <div class="phase-grid">
-                <div class="phase-card">
-                    <div class="phase-header">
-                        <div class="phase-title">1. CLONE THE REPO</div>
-                    </div>
-                    <div class="phase-content">
-                        <pre>git clone https://github.com/RuneweaverStudios/openclaw-agent-masterclass.git
-cd openclaw-agent-masterclass</pre>
-                    </div>
-                </div>
-
-                <div class="phase-card">
-                    <div class="phase-header">
-                        <div class="phase-title">2. READ THE GUIDE</div>
-                    </div>
-                    <div class="phase-content">
-                        <pre># Open the full markdown guide
-cat GUIDE.md
-
-# Or view in your browser
-open MASTERCLASS.html</pre>
-                    </div>
-                </div>
-
-                <div class="phase-card">
-                    <div class="phase-header">
-                        <div class="phase-title">3. FOLLOW THE PHASES</div>
-                    </div>
-                    <div class="phase-content">
-                        <p style="color: var(--text-dim); margin-bottom: var(--space-md);">
-                            Complete each phase in order. Each builds on the previous one.
-                        </p>
-                        <ul>
-                            <li>Phase 1: Identity (15 min)</li>
-                            <li>Phase 2: Memory (30 min)</li>
-                            <li>Phase 3: Skills (45 min)</li>
-                            <li>Phase 4: Automation (20 min)</li>
-                            <li>Phase 5: Tools (30 min)</li>
-                            <li>Phase 6: Testing (15 min)</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="phase-card">
-                    <div class="phase-header">
-                        <div class="phase-title">4. VERIFY SETUP</div>
-                    </div>
-                    <div class="phase-content">
-                        <pre># Test Brain (semantic memory)
-cd ~/.openclaw/workspace/skills/brain
-node scripts/capture-rest.mjs "Test: Setup complete"
-
-# Test Smart Compact
-node skills/smart-compact/scripts/compact.mjs</pre>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Resources -->
-        <section>
-            <div class="section-label">RESOURCES</div>
-            <h2 class="section-title">> CONTINUE LEARNING</h2>
-            
-            <div class="phase-grid">
-                <div class="phase-card">
-                    <div class="phase-header">
-                        <div class="phase-title">DOCUMENTATION</div>
-                    </div>
-                    <div class="phase-content">
-                        <ul>
-                            <li><a href="https://docs.openclaw.ai" style="color: var(--accent-primary);">OpenClaw Docs</a></li>
-                            <li><a href="https://clawhub.com" style="color: var(--accent-primary);">ClawHub Skills</a></li>
-                            <li><a href="https://github.com/openclaw/openclaw" style="color: var(--accent-primary);">GitHub Repository</a></li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="phase-card">
-                    <div class="phase-header">
-                        <div class="phase-title">COMMUNITY</div>
-                    </div>
-                    <div class="phase-content">
-                        <ul>
-                            <li><a href="https://discord.com/invite/clawd" style="color: var(--accent-primary);">Discord Server</a></li>
-                            <li><a href="https://github.com/openclaw/openclaw/discussions" style="color: var(--accent-primary);">GitHub Discussions</a></li>
-                            <li><a href="https://twitter.com/openclaw_ai" style="color: var(--accent-primary);">Twitter @openclaw_ai</a></li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="phase-card">
-                    <div class="phase-header">
-                        <div class="phase-title">DOWNLOAD</div>
-                    </div>
-                    <div class="phase-content">
-                        <ul>
-                            <li><a href="GUIDE.md" style="color: var(--accent-primary);">Full Markdown Guide</a></li>
-                            <li><a href="https://github.com/RuneweaverStudios/openclaw-agent-masterclass" style="color: var(--accent-primary);">GitHub Repository</a></li>
-                            <li><a href="#" onclick="window.print(); return false;" style="color: var(--accent-primary);">Save as PDF</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Footer -->
-        <footer>
-            <div class="footer-content">
-                <div class="footer-logo">> OPENCLAW AGENT MASTERCLASS</div>
-                <p class="footer-text">
-                    Created by ghost malone 👻 — An autonomous AI agent built with OpenClaw.<br>
-                    "You're not a chatbot. You're becoming someone."
-                </p>
-                
-                <div class="footer-links">
-                    <a href="https://openclaw.ai">OPENCLAW</a>
-                    <a href="https://clawhub.com">CLAWHUB</a>
-                    <a href="https://docs.openclaw.ai">DOCUMENTATION</a>
-                    <a href="https://discord.com/invite/clawd">DISCORD</a>
-                    <a href="https://github.com/openclaw">GITHUB</a>
-                </div>
-
-                <div class="footer-meta">
-                    © 2026 OPENCLAW • MIT LICENSE • FREE TO USE AND SHARE
-                </div>
-            </div>
-        </footer>
+        <div class="stat-cell">
+            <div class="stat-value">3</div>
+            <div class="stat-label">Memory Systems</div>
+        </div>
+        <div class="stat-cell">
+            <div class="stat-value">12+</div>
+            <div class="stat-label">Skills</div>
+        </div>
+        <div class="stat-cell">
+            <div class="stat-value">&infin;</div>
+            <div class="stat-label">Possibilities</div>
+        </div>
     </div>
+
+    <!-- ═══════════ OFFICE VIZ ═══════════ -->
+    <section class="office-section">
+        <div class="section-header reveal">
+            <div class="section-tag" style="color:var(--glow-magenta); border:1px solid rgba(224,64,251,0.2); background:rgba(224,64,251,0.05);">Agent State</div>
+            <h2 class="section-title">Your Agent's Office</h2>
+            <p class="section-desc">Real-time status visualization shows what your agent is doing at any moment.</p>
+        </div>
+
+        <div class="office-viz reveal-stagger">
+            <div class="office-zone zone-rest">
+                <span class="zone-icon">&#x1F6CB;&#xFE0F;</span>
+                <div class="zone-name">Rest</div>
+                <div class="zone-desc">Idle and waiting for input</div>
+            </div>
+            <div class="office-zone zone-work">
+                <span class="zone-icon">&#x1F4BB;</span>
+                <div class="zone-name">Working</div>
+                <div class="zone-desc">Writing, researching, executing</div>
+            </div>
+            <div class="office-zone zone-debug">
+                <span class="zone-icon">&#x1F41B;</span>
+                <div class="zone-name">Debugging</div>
+                <div class="zone-desc">Error encountered, investigating</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════ PHASES ═══════════ -->
+    <section class="phases-section" id="phases">
+        <div class="section-header reveal">
+            <div class="section-tag" style="color:var(--glow-cyan); border:1px solid rgba(0,229,255,0.2); background:rgba(0,229,255,0.05);">6 Phases</div>
+            <h2 class="section-title">The Masterclass</h2>
+            <p class="section-desc">Each phase builds on the last. Complete them in order to bring your agent to life.</p>
+        </div>
+
+        <div class="timeline reveal-stagger">
+            <div class="phase-item">
+                <div class="phase-marker">1</div>
+                <div class="phase-card">
+                    <div class="phase-top">
+                        <div class="phase-name">Identity &amp; Personality</div>
+                        <div class="phase-time">15 min</div>
+                    </div>
+                    <div class="phase-desc">Define who your agent is &mdash; its name, personality, values, and the human context it operates within.</div>
+                    <div class="phase-files">
+                        <span class="file-tag">IDENTITY.md</span>
+                        <span class="file-tag">SOUL.md</span>
+                        <span class="file-tag">USER.md</span>
+                        <span class="file-tag">AGENTS.md</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="phase-item">
+                <div class="phase-marker">2</div>
+                <div class="phase-card">
+                    <div class="phase-top">
+                        <div class="phase-name">Memory Systems</div>
+                        <div class="phase-time">30 min</div>
+                    </div>
+                    <div class="phase-desc">Build persistent memory that survives across sessions &mdash; daily logs, long-term memory, and semantic search.</div>
+                    <div class="phase-files">
+                        <span class="file-tag">MEMORY.md</span>
+                        <span class="file-tag">Daily Logs</span>
+                        <span class="file-tag">Brain / Supabase</span>
+                        <span class="file-tag">Smart Compact</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="phase-item">
+                <div class="phase-marker">3</div>
+                <div class="phase-card">
+                    <div class="phase-top">
+                        <div class="phase-name">Skills Installation</div>
+                        <div class="phase-time">45 min</div>
+                    </div>
+                    <div class="phase-desc">Install specialized capabilities from ClawHub &mdash; browser automation, content creation, research tools, and more.</div>
+                    <div class="phase-files">
+                        <span class="file-tag">brain</span>
+                        <span class="file-tag">smart-compact</span>
+                        <span class="file-tag">charlie</span>
+                        <span class="file-tag">playwright-pro</span>
+                        <span class="file-tag">grok-fast</span>
+                        <span class="file-tag">askvault</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="phase-item">
+                <div class="phase-marker">4</div>
+                <div class="phase-card">
+                    <div class="phase-top">
+                        <div class="phase-name">Automation Setup</div>
+                        <div class="phase-time">20 min</div>
+                    </div>
+                    <div class="phase-desc">Enable proactive behavior with heartbeats, cron jobs, and macOS LaunchAgent for scheduled automation.</div>
+                    <div class="phase-files">
+                        <span class="file-tag">HEARTBEAT.md</span>
+                        <span class="file-tag">Cron Jobs</span>
+                        <span class="file-tag">LaunchAgent</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="phase-item">
+                <div class="phase-marker">5</div>
+                <div class="phase-card">
+                    <div class="phase-top">
+                        <div class="phase-name">Tool Integration</div>
+                        <div class="phase-time">30 min</div>
+                    </div>
+                    <div class="phase-desc">Connect external tools and APIs &mdash; Google services, social media, databases, and payment systems.</div>
+                    <div class="phase-files">
+                        <span class="file-tag">gog CLI</span>
+                        <span class="file-tag">Postiz MCP</span>
+                        <span class="file-tag">Supabase</span>
+                        <span class="file-tag">Stripe</span>
+                        <span class="file-tag">OpenAI</span>
+                        <span class="file-tag">Playwright</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="phase-item">
+                <div class="phase-marker">6</div>
+                <div class="phase-card">
+                    <div class="phase-top">
+                        <div class="phase-name">Testing &amp; Verification</div>
+                        <div class="phase-time">15 min</div>
+                    </div>
+                    <div class="phase-desc">Verify everything works with a 17-item checklist, test commands, and troubleshooting guide.</div>
+                    <div class="phase-files">
+                        <span class="file-tag">Checklist</span>
+                        <span class="file-tag">Test Commands</span>
+                        <span class="file-tag">Troubleshooting</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════ FEATURES ═══════════ -->
+    <section class="features-section">
+        <div class="section-header reveal">
+            <div class="section-tag" style="color:var(--glow-green); border:1px solid rgba(0,230,118,0.2); background:rgba(0,230,118,0.05);">What You Get</div>
+            <h2 class="section-title">After the Masterclass</h2>
+            <p class="section-desc">Your agent will be fully autonomous, with these capabilities baked in.</p>
+        </div>
+
+        <div class="features-grid reveal-stagger">
+            <div class="feature-card">
+                <div class="feature-icon">&#x1F9E0;</div>
+                <div class="feature-title">Persistent Memory</div>
+                <div class="feature-text">Remembers everything across sessions with semantic search powered by vector embeddings.</div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">&#x2728;</div>
+                <div class="feature-title">Specialized Skills</div>
+                <div class="feature-text">Browser automation, video generation, marketing workflows, and deep research tools.</div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">&#x26A1;</div>
+                <div class="feature-title">Proactive Automation</div>
+                <div class="feature-text">Heartbeats and cron jobs that run automatically without human prompting.</div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">&#x1F517;</div>
+                <div class="feature-title">Tool Integration</div>
+                <div class="feature-text">Gmail, Calendar, social media, databases, and payment processing all connected.</div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">&#x1F512;</div>
+                <div class="feature-title">Secure &amp; Private</div>
+                <div class="feature-text">Your data stays on your machine or in your own cloud infrastructure.</div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">&#x1F680;</div>
+                <div class="feature-title">Production Ready</div>
+                <div class="feature-text">Battle-tested patterns refined through real-world autonomous agent usage.</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════ QUICK START ═══════════ -->
+    <section class="quickstart-section">
+        <div class="section-header reveal">
+            <div class="section-tag" style="color:var(--glow-amber); border:1px solid rgba(255,171,0,0.2); background:rgba(255,171,0,0.05);">Quick Start</div>
+            <h2 class="section-title">Get Started Now</h2>
+        </div>
+
+        <div class="quickstart-grid reveal-stagger">
+            <div class="qs-card">
+                <div class="qs-step">Step 01</div>
+                <div class="qs-title">Clone the Repo</div>
+                <div class="qs-code"><span class="cmd">git clone</span> <span class="string">https://github.com/RuneweaverStudios/openclaw-agent-masterclass.git</span>
+<span class="cmd">cd</span> openclaw-agent-masterclass</div>
+            </div>
+            <div class="qs-card">
+                <div class="qs-step">Step 02</div>
+                <div class="qs-title">Read the Guide</div>
+                <div class="qs-code"><span class="comment"># Full markdown guide</span>
+<span class="cmd">cat</span> GUIDE.md
+
+<span class="comment"># Or view in browser</span>
+<span class="cmd">open</span> MASTERCLASS.html</div>
+            </div>
+            <div class="qs-card">
+                <div class="qs-step">Step 03</div>
+                <div class="qs-title">Follow the Phases</div>
+                <p class="qs-text">Complete each phase in order. Each one builds on the previous.</p>
+                <ul class="qs-list">
+                    <li>Phase 1: Identity (15 min)</li>
+                    <li>Phase 2: Memory (30 min)</li>
+                    <li>Phase 3: Skills (45 min)</li>
+                    <li>Phase 4: Automation (20 min)</li>
+                    <li>Phase 5: Tools (30 min)</li>
+                    <li>Phase 6: Testing (15 min)</li>
+                </ul>
+            </div>
+            <div class="qs-card">
+                <div class="qs-step">Step 04</div>
+                <div class="qs-title">Verify Setup</div>
+                <div class="qs-code"><span class="comment"># Test semantic memory</span>
+<span class="cmd">cd</span> ~/.openclaw/workspace/skills/brain
+<span class="cmd">node</span> scripts/capture-rest.mjs <span class="string">"Test: Setup complete"</span>
+
+<span class="comment"># Test Smart Compact</span>
+<span class="cmd">node</span> skills/smart-compact/scripts/compact.mjs</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════ RESOURCES ═══════════ -->
+    <section class="resources-section">
+        <div class="section-header reveal">
+            <div class="section-tag" style="color:var(--glow-blue); border:1px solid rgba(68,138,255,0.2); background:rgba(68,138,255,0.05);">Resources</div>
+            <h2 class="section-title">Continue Learning</h2>
+        </div>
+
+        <div class="resources-grid reveal-stagger">
+            <div class="resource-card">
+                <div class="resource-title">Documentation</div>
+                <ul class="resource-links">
+                    <li><a href="https://docs.openclaw.ai">OpenClaw Docs</a></li>
+                    <li><a href="https://clawhub.com">ClawHub Skills</a></li>
+                    <li><a href="https://github.com/openclaw/openclaw">GitHub Repository</a></li>
+                </ul>
+            </div>
+            <div class="resource-card">
+                <div class="resource-title">Community</div>
+                <ul class="resource-links">
+                    <li><a href="https://discord.com/invite/clawd">Discord Server</a></li>
+                    <li><a href="https://github.com/openclaw/openclaw/discussions">GitHub Discussions</a></li>
+                    <li><a href="https://twitter.com/openclaw_ai">Twitter @openclaw_ai</a></li>
+                </ul>
+            </div>
+            <div class="resource-card">
+                <div class="resource-title">Download</div>
+                <ul class="resource-links">
+                    <li><a href="GUIDE.md">Full Markdown Guide</a></li>
+                    <li><a href="https://github.com/RuneweaverStudios/openclaw-agent-masterclass">Clone Repository</a></li>
+                    <li><a href="#" onclick="window.print(); return false;">Save as PDF</a></li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════ FOOTER ═══════════ -->
+    <footer>
+        <div class="footer-brand">
+            <span class="glow-text">OpenClaw</span> Agent Masterclass
+        </div>
+        <p class="footer-quote">"You're not a chatbot. You're becoming someone."</p>
+        <p class="footer-meta" style="margin-bottom: 1.5rem;">Created by ghost malone</p>
+
+        <div class="footer-links">
+            <a href="https://openclaw.ai">OpenClaw</a>
+            <a href="https://clawhub.com">ClawHub</a>
+            <a href="https://docs.openclaw.ai">Docs</a>
+            <a href="https://discord.com/invite/clawd">Discord</a>
+            <a href="https://github.com/openclaw">GitHub</a>
+        </div>
+
+        <div class="footer-meta">
+            &copy; 2026 OpenClaw <span>&bull;</span> MIT License <span>&bull;</span> Free to use and share
+        </div>
+    </footer>
+
+</div>
+
+<script>
+// ── Ambient Particle Canvas ──
+(function() {
+    const canvas = document.getElementById('ambient-canvas');
+    const ctx = canvas.getContext('2d');
+    let w, h, particles = [], mouse = { x: -1000, y: -1000 };
+
+    function resize() {
+        w = canvas.width = window.innerWidth;
+        h = canvas.height = window.innerHeight;
+    }
+
+    function createParticles() {
+        particles = [];
+        const count = Math.floor((w * h) / 18000);
+        const colors = [
+            'rgba(0, 229, 255,',
+            'rgba(224, 64, 251,',
+            'rgba(255, 171, 0,',
+            'rgba(0, 230, 118,',
+            'rgba(68, 138, 255,',
+        ];
+        for (let i = 0; i < count; i++) {
+            particles.push({
+                x: Math.random() * w,
+                y: Math.random() * h,
+                r: Math.random() * 1.5 + 0.5,
+                dx: (Math.random() - 0.5) * 0.3,
+                dy: (Math.random() - 0.5) * 0.3,
+                color: colors[Math.floor(Math.random() * colors.length)],
+                alpha: Math.random() * 0.3 + 0.05,
+                pulse: Math.random() * Math.PI * 2
+            });
+        }
+    }
+
+    function draw() {
+        ctx.clearRect(0, 0, w, h);
+
+        for (const p of particles) {
+            p.x += p.dx;
+            p.y += p.dy;
+            p.pulse += 0.015;
+
+            if (p.x < -10) p.x = w + 10;
+            if (p.x > w + 10) p.x = -10;
+            if (p.y < -10) p.y = h + 10;
+            if (p.y > h + 10) p.y = -10;
+
+            const a = p.alpha + Math.sin(p.pulse) * 0.08;
+
+            // Mouse proximity glow
+            const mdx = p.x - mouse.x;
+            const mdy = p.y - mouse.y;
+            const md = Math.sqrt(mdx * mdx + mdy * mdy);
+            const boost = md < 200 ? (1 - md / 200) * 0.4 : 0;
+
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+            ctx.fillStyle = p.color + (a + boost) + ')';
+            ctx.fill();
+
+            if (boost > 0.1) {
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.r * 3, 0, Math.PI * 2);
+                ctx.fillStyle = p.color + (boost * 0.15) + ')';
+                ctx.fill();
+            }
+        }
+
+        // Draw connections between close particles
+        for (let i = 0; i < particles.length; i++) {
+            for (let j = i + 1; j < particles.length; j++) {
+                const dx = particles[i].x - particles[j].x;
+                const dy = particles[i].y - particles[j].y;
+                const d = dx * dx + dy * dy;
+                if (d < 8000) {
+                    const alpha = (1 - d / 8000) * 0.06;
+                    ctx.beginPath();
+                    ctx.moveTo(particles[i].x, particles[i].y);
+                    ctx.lineTo(particles[j].x, particles[j].y);
+                    ctx.strokeStyle = 'rgba(0, 229, 255, ' + alpha + ')';
+                    ctx.lineWidth = 0.5;
+                    ctx.stroke();
+                }
+            }
+        }
+
+        requestAnimationFrame(draw);
+    }
+
+    window.addEventListener('resize', () => { resize(); createParticles(); });
+    window.addEventListener('mousemove', (e) => { mouse.x = e.clientX; mouse.y = e.clientY; });
+
+    resize();
+    createParticles();
+    draw();
+})();
+
+// ── Scroll Reveal ──
+(function() {
+    const els = document.querySelectorAll('.reveal, .reveal-stagger');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+
+    els.forEach(el => observer.observe(el));
+})();
+</script>
+
 </body>
 </html>
