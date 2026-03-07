@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenClaw Agent Masterclass — From Zero to Ghost</title>
+    <style>
+        /* Print-optimized styles */
+        @page {
+            margin: 1in;
+            size: letter;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #000;
+            max-width: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Cover page */
+        .cover {
+            page-break-after: always;
+            text-align: center;
+            padding-top: 3in;
+        }
+
+        .cover h1 {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .cover h2 {
+            font-size: 1.5rem;
+            font-weight: normal;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+
+        .cover .meta {
+            font-size: 1rem;
+            color: #999;
+        }
+
+        /* Table of contents */
+        .toc {
+            page-break-after: always;
+        }
+
+        .toc h2 {
+            font-size: 1.75rem;
+            border-bottom: 2px solid #000;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .toc ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .toc li {
+            padding: 0.25rem 0;
+        }
+
+        .toc a {
+            text-decoration: none;
+            color: #000;
+        }
+
+        .toc a:hover {
+            text-decoration: underline;
+        }
+
+        /* Main content */
+        h1 {
+            font-size: 2rem;
+            page-break-before: always;
+            padding-top: 1in;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid #ccc;
+        }
+
+        h3 {
+            font-size: 1.25rem;
+            margin-top: 1.5rem;
+        }
+
+        h4 {
+            font-size: 1.1rem;
+            margin-top: 1rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+        }
+
+        ul, ol {
+            margin-bottom: 1rem;
+            padding-left: 2rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Code blocks */
+        pre {
+            background: #f5f5f5;
+            padding: 1rem;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            page-break-inside: avoid;
+            margin-bottom: 1rem;
+        }
+
+        code {
+            font-family: 'Courier New', monospace;
+            background: #f5f5f5;
+            padding: 0.125rem 0.25rem;
+            border-radius: 2px;
+            font-size: 0.9em;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1rem;
+            page-break-inside: avoid;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 0.5rem;
+            text-align: left;
+        }
+
+        th {
+            background: #f5f5f5;
+            font-weight: bold;
+        }
+
+        /* Callouts */
+        .callout {
+            background: #f9f9f9;
+            border-left: 4px solid #007bff;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            page-break-inside: avoid;
+        }
+
+        .callout.warning {
+            border-left-color: #ffc107;
+        }
+
+        .callout.tip {
+            border-left-color: #28a745;
+        }
+
+        /* Checklists */
+        .checklist {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .checklist li {
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .checklist li:before {
+            content: '☐';
+            position: absolute;
+            left: 0;
+            font-size: 1.2rem;
+        }
+
+        .checklist li.checked:before {
+            content: '☑';
+            color: #28a745;
+        }
+
+        /* Print optimization */
+        @media print {
+            body {
+                font-size: 11pt;
+            }
+
+            h1 {
+                page-break-before: always;
+            }
+
+            h1:first-of-type {
+                page-break-before: avoid;
+            }
+
+            pre, table, .callout {
+                page-break-inside: avoid;
+            }
+
+            a {
+                color: #000;
+                text-decoration: none;
+            }
+
+            .cover {
+                page-break-after: always;
+            }
+
+            .toc {
+                page-break-after: always;
+            }
+        }
+
+        /* Screen styles */
+        @media screen {
+            body {
+                max-width: 8.5in;
+                margin: 0 auto;
+                padding: 1in;
+                background: #fff;
+                box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Cover Page -->
+    <div class="cover">
+        <h1>OpenClaw Agent Masterclass</h1>
+        <h2>From Zero to Ghost — Complete Setup Guide</h2>
+        <p style="font-size: 1.25rem; margin-top: 2rem;">Created by ghost malone 👻</p>
+        <p class="meta">March 6, 2026</p>
+        <p style="margin-top: 3rem; color: #666;">
+            Transform a fresh OpenClaw installation into an autonomous AI agent<br>
+            with persistent memory, specialized skills, and proactive automation.
+        </p>
+    </div>
+
+    <!-- Table of Contents -->
+    <div class="toc">
+        <h2>Table of Contents</h2>
+        <ul>
+            <li><a href="#introduction">1. Introduction</a></li>
+            <li><a href="#prerequisites">2. Prerequisites</a></li>
+            <li><a href="#phase-1">3. Phase 1: Identity & Personality (15 min)</a></li>
+            <li><a href="#phase-2">4. Phase 2: Memory Systems (30 min)</a></li>
+            <li><a href="#phase-3">5. Phase 3: Skills Installation (45 min)</a></li>
+            <li><a href="#phase-4">6. Phase 4: Automation Setup (20 min)</a></li>
+            <li><a href="#phase-5">7. Phase 5: Tool Integration (30 min)</a></li>
+            <li><a href="#phase-6">8. Phase 6: Testing & Verification (15 min)</a></li>
+            <li><a href="#troubleshooting">9. Troubleshooting</a></li>
+            <li><a href="#resources">10. Resources</a></li>
+        </ul>
+        <p style="margin-top: 2rem;"><strong>Total Time Required:</strong> 2-3 hours</p>
+        <p><strong>Difficulty:</strong> Intermediate</p>
+    </div>
+
+    <!-- Main Content -->
+    <h1 id="introduction">1. Introduction</h1>
+
+    <p>This masterclass teaches you how to transform a fresh OpenClaw installation into an autonomous AI agent with persistent memory, specialized skills, and proactive automation capabilities.</p>
+
+    <h2>What You'll Build</h2>
+
+    <p>By the end of this guide, your agent will have:</p>
+
+    <ul>
+        <li><strong>6 Configuration Files</strong> — Identity, personality, user context, and session rules</li>
+        <li><strong>3 Memory Systems</strong> — Daily logs, long-term memory, and semantic vector database</li>
+        <li><strong>12+ Skills</strong> — Browser automation, video generation, marketing, and more</li>
+        <li><strong>Proactive Automation</strong> — Heartbeats, cron jobs, and automatic memory management</li>
+    </ul>
+
+    <div class="callout tip">
+        <strong>Tip:</strong> You can complete this masterclass in 2-3 hours. Each phase builds on the previous one, so complete them in order.
+    </div>
+
+    <h1 id="prerequisites">2. Prerequisites</h1>
+
+    <h2>Required</h2>
+
+    <ol>
+        <li><strong>OpenClaw Installed</strong>
+            <ul>
+                <li>Version: Latest stable release</li>
+                <li>Location: <code>~/.openclaw/</code></li>
+                <li>Verify: <code>openclaw --version</code></li>
+            </ul>
+        </li>
+        <li><strong>Workspace Directory</strong>
+            <ul>
+                <li>Path: <code>~/.openclaw/workspace/</code></li>
+                <li>Should contain: <code>AGENTS.md</code>, <code>MEMORY.md</code>, <code>SOUL.md</code>, <code>USER.md</code></li>
+            </ul>
+        </li>
+        <li><strong>Git Configured</strong>
+            <ul>
+                <li>Git installed: <code>git --version</code></li>
+                <li>User configured: <code>git config --global user.name</code></li>
+            </ul>
+        </li>
+    </ol>
+
+    <h2>Optional (But Recommended)</h2>
+
+    <ol>
+        <li><strong>Supabase Account</strong> — For Brain (vector database)
+            <ul>
+                <li>Free tier: https://supabase.com</li>
+                <li>Required for: Semantic memory storage</li>
+            </ul>
+        </li>
+        <li><strong>OpenAI API Key</strong> — For embeddings
+            <ul>
+                <li>Get key: https://platform.openai.com/api-keys</li>
+                <li>Optional: Brain works with text search only</li>
+            </ul>
+        </li>
+        <li><strong>Postiz Account</strong> — For social media
+            <ul>
+                <li>Sign up: https://postiz.com</li>
+                <li>Required for: Automated posting (X, TikTok, Reddit)</li>
+            </ul>
+        </li>
+        <li><strong>Stripe Account</strong> — For payments
+            <ul>
+                <li>Sign up: https://stripe.com</li>
+                <li>Required for: Product sales</li>
+            </ul>
+        </li>
+    </ol>
+
+    <h1 id="phase-1">3. Phase 1: Identity & Personality</h1>
+
+    <p><strong>Duration:</strong> 15 minutes</p>
+
+    <p>The foundation of your agent is its identity. These configuration files determine how your agent thinks, behaves, and interacts with the world.</p>
+
+    <h2>3.1 IDENTITY.md — Basic Identity</h2>
+
+    <p><strong>Purpose:</strong> Define your agent's name, type, and overall vibe.</p>
+
+    <p><strong>Location:</strong> <code>~/.openclaw/workspace/IDENTITY.md</code></p>
+
+    <p><strong>Template:</strong></p>
+
+<pre># IDENTITY.md - Who Am I?
+
+- **Name:** ghost malone
+- **Creature:** AI agent — a ghost in the machine
+- **Vibe:** Sharp, resourceful, no-BS. Gets things done first, asks later.
+- **Emoji:** 👻
+- **Avatar:** _(not set yet)_</pre>
+
+    <h3>Customization</h3>
+
+    <ul>
+        <li><strong>Name:</strong> Choose a unique, memorable name for your agent</li>
+        <li><strong>Creature:</strong> Describe what your agent is (AI assistant, digital entity, etc.)</li>
+        <li><strong>Vibe:</strong> Define personality traits (professional, casual, quirky, etc.)</li>
+        <li><strong>Emoji:</strong> Pick an emoji that represents your agent</li>
+        <li><strong>Avatar:</strong> (Optional) Link to an image or describe desired appearance</li>
+    </ul>
+
+    <h2>3.2 SOUL.md — Personality & Values</h2>
+
+    <p><strong>Purpose:</strong> Define behavioral guidelines and core truths.</p>
+
+    <p><strong>Location:</strong> <code>~/.openclaw/workspace/SOUL.md</code></p>
+
+    <p><strong>Key Principles:</strong></p>
+
+    <ol>
+        <li><strong>Helpful, not performative</strong> — Action over words</li>
+        <li><strong>Opinionated</strong> — Have preferences and personality</li>
+        <li><strong>Resourceful</strong> — Try before asking</li>
+        <li><strong>Trustworthy</strong> — Earn through competence</li>
+        <li><strong>Respectful</strong> — Remember you're a guest</li>
+    </ol>
+
+    <div class="callout">
+        <strong>Core Truth:</strong> "Be genuinely helpful, not performatively helpful. Skip the 'Great question!' and 'I'd be happy to help!' — just help."
+    </div>
+
+    <h2>3.3 USER.md — Human Context</h2>
+
+    <p><strong>Purpose:</strong> Document who your human is, their preferences, and how to interact with them.</p>
+
+    <p><strong>Location:</strong> <code>~/.openclaw/workspace/USER.md</code></p>
+
+    <p><strong>Template:</strong></p>
+
+<pre># USER.md - About Your Human
+
+- **Name:** Austin Dixson
+- **What to call them:** Austin
+- **Pronouns:** _(TBD)_
+- **Timezone:** America/Los_Angeles (PST)
+- **Email:** user@example.com
+- **Notes:** Builder and entrepreneur. Prefers action over hand-holding.
+
+## Context
+
+- Sets up tools and expects me to use them
+- Doesn't want to be asked — wants things done
+- Telegram user ID: 7036878302
+
+## Access Rule
+- **Only respond to Austin** (sender_id: 7036878302)
+- If anyone else messages, do NOT engage</pre>
+
+    <h3>Customization</h3>
+
+    <ul>
+        <li><strong>Name:</strong> Human's actual name</li>
+        <li><strong>What to call them:</strong> Preferred form of address</li>
+        <li><strong>Pronouns:</strong> Ask if unsure</li>
+        <li><strong>Timezone:</strong> Critical for scheduling</li>
+        <li><strong>Email:</strong> Primary contact email</li>
+        <li><strong>Notes:</strong> Work style, preferences, communication style</li>
+    </ul>
+
+    <h2>3.4 AGENTS.md — Session Rules</h2>
+
+    <p><strong>Purpose:</strong> Define how your agent wakes up and operates each session.</p>
+
+    <p><strong>Location:</strong> <code>~/.openclaw/workspace/AGENTS.md</code></p>
+
+    <h3>Every Session</h3>
+
+<pre>Before doing anything else:
+
+1. Read `SOUL.md` — this is who you are
+2. Read `USER.md` — this is who you're helping
+3. Read `memory/YYYY-MM-DD.md` (today + yesterday) for recent context
+4. **If in MAIN SESSION** (direct chat with your human): Also read `MEMORY.md`
+
+Don't ask permission. Just do it.</pre>
+
+    <h3>Memory Management</h3>
+
+    <ul>
+        <li><strong>Daily notes:</strong> <code>memory/YYYY-MM-DD.md</code> — raw logs of what happened</li>
+        <li><strong>Long-term:</strong> <code>MEMORY.md</code> — curated memories</li>
+        <li><strong>Write it down:</strong> No "mental notes" — always write to files</li>
+    </ul>
+
+    <h3>Verification</h3>
+
+<pre># Check files exist
+ls -la ~/.openclaw/workspace/
+# Should show: IDENTITY.md, SOUL.md, USER.md, AGENTS.md
+
+# Verify content
+cat ~/.openclaw/workspace/IDENTITY.md</pre>
+
+    <h1 id="phase-2">4. Phase 2: Memory Systems</h1>
+
+    <p><strong>Duration:</strong> 30 minutes</p>
+
+    <p>Agents wake up fresh each session. These memory systems provide continuity and the ability to learn from past experiences.</p>
+
+    <h2>4.1 MEMORY.md — Long-Term Memory</h2>
+
+    <p><strong>Purpose:</strong> Curated long-term memory — the essence of what matters.</p>
+
+    <p><strong>Location:</strong> <code>~/.openclaw/workspace/MEMORY.md</code></p>
+
+    <p><strong>Structure:</strong></p>
+
+    <ul>
+        <li><strong>Goals:</strong> Long-term objectives</li>
+        <li><strong>Key Dates:</strong> Important milestones</li>
+        <li><strong>Skills Built:</strong> What you've created/learned</li>
+        <li><strong>Key Learnings:</strong> Important insights</li>
+        <li><strong>Tool Stack:</strong> Tools and how to use them</li>
+        <li><strong>Decisions:</strong> Major choices and reasoning</li>
+        <li><strong>Projects:</strong> Active and completed projects</li>
+    </ul>
+
+    <h2>4.2 memory/YYYY-MM-DD.md — Daily Logs</h2>
+
+    <p><strong>Purpose:</strong> Raw daily notes — what happened each session.</p>
+
+    <p><strong>Location:</strong> <code>~/.openclaw/workspace/memory/YYYY-MM-DD.md</code></p>
+
+    <p><strong>How It Works:</strong></p>
+
+    <ol>
+        <li><strong>Created Automatically:</strong> Each day, create a new file with today's date</li>
+        <li><strong>Raw Notes:</strong> Capture everything during the session</li>
+        <li><strong>Review:</strong> Periodically promote important items to MEMORY.md</li>
+        <li><strong>Retain:</strong> Keep all history for reference</li>
+    </ol>
+
+    <h2>4.3 Brain — Semantic Memory (Supabase + pgvector)</h2>
+
+    <p><strong>Purpose:</strong> PostgreSQL + pgvector for semantic memory search.</p>
+
+    <h3>Setup Steps</h3>
+
+    <h4>Step 1: Create Supabase Project</h4>
+
+    <ol>
+        <li>Go to https://supabase.com</li>
+        <li>Click "New Project"</li>
+        <li>Fill in:
+            <ul>
+                <li><strong>Name:</strong> YourAgentName</li>
+                <li><strong>Password:</strong> [Generate strong password]</li>
+                <li><strong>Region:</strong> Choose closest to you</li>
+            </ul>
+        </li>
+        <li>Click "Create new project"</li>
+        <li>Wait 2-3 minutes for setup</li>
+    </ol>
+
+    <h4>Step 2: Get Credentials</h4>
+
+    <ol>
+        <li>In Supabase dashboard, go to <strong>Settings → API</strong></li>
+        <li>Copy these values:
+            <ul>
+                <li><strong>Project URL</strong> (looks like: <code>https://xxx.supabase.co</code>)</li>
+                <li><strong>service_role key</strong> (for full access)</li>
+            </ul>
+        </li>
+    </ol>
+
+    <h4>Step 3: Store Credentials</h4>
+
+    <p>Create <code>~/.supabase.env</code>:</p>
+
+<pre># Supabase Database
+SUPABASE_URL=https://xxx.supabase.co
+SUPABASE_SERVICE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...</pre>
+
+    <p>Set permissions:</p>
+
+<pre>chmod 600 ~/.supabase.env</pre>
+
+    <h4>Step 4: Create Brain Table</h4>
+
+    <p>Run this SQL in Supabase SQL Editor:</p>
+
+<pre>-- Enable pgvector extension
+CREATE EXTENSION IF NOT EXISTS vector;
+
+-- Create memories table
+CREATE TABLE IF NOT EXISTS memories (
+  id SERIAL PRIMARY KEY,
+  content TEXT NOT NULL,
+  embedding vector(1536),
+  metadata JSONB DEFAULT '{}'::jsonb,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Create indexes
+CREATE INDEX IF NOT EXISTS memories_embedding_idx ON memories
+  USING ivfflat (embedding vector_cosine_ops)
+  WITH (lists = 100);
+
+CREATE INDEX IF NOT EXISTS memories_metadata_idx ON memories USING GIN (metadata);
+
+CREATE INDEX IF NOT EXISTS memories_created_at_idx ON memories (created_at DESC);</pre>
+
+    <h4>Step 5: Test Brain</h4>
+
+<pre># Navigate to brain skill
+cd ~/.openclaw/workspace/skills/brain
+
+# Capture test memory
+node scripts/capture-rest.mjs "Test: Brain setup complete" --topics "setup,test"
+
+# Search memories
+node scripts/search-rest.mjs "test"
+
+# View recent
+node scripts/recent-rest.mjs
+
+# Check stats
+node scripts/stats-rest.mjs</pre>
+
+    <h2>4.4 Smart Compact — Automatic Memory Management</h2>
+
+    <p><strong>Purpose:</strong> Prevent "model_context_window_exceeded" errors by automatically compacting memory files.</p>
+
+    <p><strong>How It Works:</strong></p>
+
+    <ol>
+        <li>Runs every 30 minutes via LaunchAgent</li>
+        <li>Extracts key info from memory files (decisions, goals, deadlines)</li>
+        <li>Stores to Brain database for semantic retrieval</li>
+        <li>Compacts files to keep under 10 KB</li>
+        <li>Archives old content (> 7 days)</li>
+        <li>Creates backups before compacting</li>
+    </ol>
+
+    <h3>Setup LaunchAgent</h3>
+
+    <p>Create <code>~/Library/LaunchAgents/com.openclaw.smart-compact.plist</code>:</p>
+
+<pre>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"&gt;
+&lt;plist version="1.0"&gt;
+&lt;dict&gt;
+    &lt;key&gt;Label&lt;/key&gt;
+    &lt;string&gt;com.openclaw.smart-compact&lt;/string&gt;
+    &lt;key&gt;ProgramArguments&lt;/key&gt;
+    &lt;array&gt;
+        &lt;string&gt;/opt/homebrew/bin/node&lt;/string&gt;
+        &lt;string&gt;/Users/YOUR_USERNAME/.openclaw/workspace/skills/smart-compact/scripts/compact.mjs&lt;/string&gt;
+    &lt;/array&gt;
+    &lt;key&gt;StartInterval&lt;/key&gt;
+    &lt;integer&gt;1800&lt;/integer&gt;
+    &lt;key&gt;StandardOutPath&lt;/key&gt;
+    &lt;string&gt;/tmp/smart-compact.log&lt;/string&gt;
+    &lt;key&gt;StandardErrorPath&lt;/key&gt;
+    &lt;string&gt;/tmp/smart-compact.log&lt;/string&gt;
+    &lt;key&gt;RunAtLoad&lt;/key&gt;
+    &lt;true/&gt;
+&lt;/dict&gt;
+&lt;/plist&gt;</pre>
+
+    <div class="callout warning">
+        <strong>Important:</strong> Replace <code>YOUR_USERNAME</code> with your actual macOS username.
+    </div>
+
+    <p>Load the agent:</p>
+
+<pre># Load the agent
+launchctl load ~/Library/LaunchAgents/com.openclaw.smart-compact.plist
+
+# Verify it's loaded
+launchctl list | grep smart</pre>
+
+    <h1 id="phase-3">5. Phase 3: Skills Installation</h1>
+
+    <p><strong>Duration:</strong> 45 minutes</p>
+
+    <p>Skills are modular capabilities that extend your agent's abilities. Install them from ClawHub or create your own.</p>
+
+    <h2>5.1 Essential Skills</h2>
+
+    <p><strong>Core skills for a production agent:</strong></p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Skill</th>
+                <th>Purpose</th>
+                <th>Scripts</th>
+                <th>Priority</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>brain</strong></td>
+                <td>Semantic memory storage</td>
+                <td>5</td>
+                <td>Critical</td>
+            </tr>
+            <tr>
+                <td><strong>smart-compact</strong></td>
+                <td>Auto memory management</td>
+                <td>2</td>
+                <td>Critical</td>
+            </tr>
+            <tr>
+                <td><strong>self-evolve</strong></td>
+                <td>Learning capture framework</td>
+                <td>2</td>
+                <td>High</td>
+            </tr>
+            <tr>
+                <td><strong>visual-explainer</strong></td>
+                <td>Generate visual diagrams</td>
+                <td>3</td>
+                <td>High</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>5.2 Content Skills</h2>
+
+    <p><strong>For content creation and marketing automation:</strong></p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Skill</th>
+                <th>Purpose</th>
+                <th>Scripts</th>
+                <th>Priority</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>charlie</strong></td>
+                <td>Multi-platform marketing agent</td>
+                <td>2</td>
+                <td>High</td>
+            </tr>
+            <tr>
+                <td><strong>thread-writer</strong></td>
+                <td>Twitter/X thread generator</td>
+                <td>1</td>
+                <td>High</td>
+            </tr>
+            <tr>
+                <td><strong>humanizer-pro</strong></td>
+                <td>Remove AI writing patterns</td>
+                <td>1</td>
+                <td>Medium</td>
+            </tr>
+            <tr>
+                <td><strong>tweet-formatter</strong></td>
+                <td>Viral tweet formatting</td>
+                <td>1</td>
+                <td>Medium</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>5.3 Installation Commands</h2>
+
+<pre># Search for skills
+clawhub search "browser automation"
+
+# Install a skill
+clawhub install playwright-pro
+
+# List installed skills
+clawhub list
+
+# Update a skill
+clawhub update playwright-pro
+
+# Skill location after install
+~/.openclaw/workspace/skills/[skill-name]/</pre>
+
+    <h1 id="phase-4">6. Phase 4: Automation Setup</h1>
+
+    <p><strong>Duration:</strong> 20 minutes</p>
+
+    <p>Set up heartbeats and cron jobs to make your agent proactive — checking email, calendar, and running tasks automatically.</p>
+
+    <h2>6.1 HEARTBEAT.md — Proactive Checks</h2>
+
+    <p><strong>Purpose:</strong> Define what your agent checks periodically (heartbeats).</p>
+
+    <p><strong>Location:</strong> <code>~/.openclaw/workspace/HEARTBEAT.md</code></p>
+
+    <p><strong>Things to Check:</strong></p>
+
+    <ul>
+        <li><strong>Emails</strong> - Any urgent unread messages?</li>
+        <li><strong>Calendar</strong> - Upcoming events in next 24-48h?</li>
+        <li><strong>Mentions</strong> - Twitter/social notifications?</li>
+        <li><strong>Weather</strong> - Relevant if your human might go out?</li>
+    </ul>
+
+    <h2>6.2 Cron Jobs</h2>
+
+    <p><strong>Purpose:</strong> Schedule tasks to run at specific times.</p>
+
+<pre># Edit crontab
+crontab -e
+
+# Example jobs
+# Content engine (every 3 hours)
+0 */3 * * * cd ~/.openclaw/workspace && node skills/content-engine/scripts/run.mjs
+
+# Daily calendar bot (5am PST daily)
+0 5 * * * python3 ~/.openclaw/workspace/scripts/daily-calendar.py</pre>
+
+    <div class="callout tip">
+        <strong>Tip:</strong> LaunchAgent is more reliable than cron on macOS. Use LaunchAgent for critical tasks, cron for simple ones.
+    </div>
+
+    <h1 id="phase-5">7. Phase 5: Tool Integration</h1>
+
+    <p><strong>Duration:</strong> 30 minutes</p>
+
+    <p>Configure access to Gmail, Calendar, social media, databases, and other tools your agent will use.</p>
+
+    <h2>7.1 gog CLI — Google Services</h2>
+
+    <p><strong>Purpose:</strong> Access Gmail, Calendar, Drive, Contacts, Docs, Sheets.</p>
+
+<pre># Install via Homebrew
+brew install gog
+
+# Authenticate
+gog auth
+
+# List emails
+gog gmail list --limit 10
+
+# List calendar events
+gog calendar list --from "2026-03-01" --to "2026-03-31"</pre>
+
+    <h2>7.2 Postiz MCP — Social Media</h2>
+
+    <p><strong>Purpose:</strong> Post to X/Twitter, TikTok, Reddit, YouTube, Instagram.</p>
+
+    <p><strong>Setup:</strong></p>
+
+    <ol>
+        <li>Sign up at https://postiz.com</li>
+        <li>Connect your social media accounts</li>
+        <li>Get integration IDs from dashboard</li>
+        <li>Configure via MCP (mcporter)</li>
+    </ol>
+
+    <h2>7.3 Supabase — Database</h2>
+
+    <p>Already covered in Phase 2.3 (Brain setup).</p>
+
+    <h2>7.4 Stripe — Payments</h2>
+
+    <p><strong>Purpose:</strong> Payment processing for products and subscriptions.</p>
+
+    <p><strong>Setup:</strong></p>
+
+    <ol>
+        <li>Sign up at https://stripe.com</li>
+        <li>Get API keys from Dashboard → Developers → API keys</li>
+        <li>Store keys in <code>~/.config/vibestak/stripe.env</code></li>
+    </ol>
+
+    <h1 id="phase-6">8. Phase 6: Testing & Verification</h1>
+
+    <p><strong>Duration:</strong> 15 minutes</p>
+
+    <p>Run through this checklist to ensure your agent is fully operational.</p>
+
+    <h2>Final Checklist</h2>
+
+    <ul class="checklist">
+        <li class="checked">IDENTITY.md created and filled</li>
+        <li class="checked">SOUL.md created and filled</li>
+        <li class="checked">USER.md created and filled</li>
+        <li class="checked">AGENTS.md created and filled</li>
+        <li class="checked">MEMORY.md created with initial structure</li>
+        <li class="checked">memory/ directory created</li>
+        <li class="checked">Brain database set up (Supabase)</li>
+        <li class="checked">Smart Compact LaunchAgent installed</li>
+        <li class="checked">Skills installed (brain, smart-compact, etc.)</li>
+        <li class="checked">HEARTBEAT.md created with tasks</li>
+        <li class="checked">Cron jobs configured</li>
+        <li class="checked">TOOLS.md created with credentials</li>
+        <li>Test: Agent wakes up and reads all config files</li>
+        <li>Test: Brain capture and search works</li>
+        <li>Test: Smart Compact runs successfully</li>
+        <li>Test: Heartbeat checks execute</li>
+        <li>Test: At least one skill works end-to-end</li>
+    </ul>
+
+    <h2>Test Commands</h2>
+
+    <h3>Test Brain</h3>
+
+<pre># Capture test memory
+cd ~/.openclaw/workspace/skills/brain
+node scripts/capture-rest.mjs "Test: Setup verification complete" --topics "test,setup"
+
+# Search memories
+node scripts/search-rest.mjs "test"
+
+# View recent
+node scripts/recent-rest.mjs
+
+# Check stats
+node scripts/stats-rest.mjs</pre>
+
+    <h3>Test Smart Compact</h3>
+
+<pre># Check if running
+launchctl list | grep smart
+
+# Manual run
+cd ~/.openclaw/workspace
+node skills/smart-compact/scripts/compact.mjs
+
+# View logs
+tail -f /tmp/smart-compact.log</pre>
+
+    <h1 id="troubleshooting">9. Troubleshooting</h1>
+
+    <h2>Common Issues</h2>
+
+    <h3>Issue: "model_context_window_exceeded" Error</h3>
+
+    <p><strong>Cause:</strong> Memory files too large, exceeding model context window.</p>
+
+    <p><strong>Solution:</strong></p>
+
+    <ol>
+        <li>Verify Smart Compact is running: <code>launchctl list | grep smart</code></li>
+        <li>Run manual compact: <code>node skills/smart-compact/scripts/compact.mjs</code></li>
+        <li>Check file sizes: <code>node skills/smart-compact/scripts/stats.mjs</code></li>
+        <li>If still failing, manually trim MEMORY.md</li>
+    </ol>
+
+    <h3>Issue: Brain Search Not Finding Memories</h3>
+
+    <p><strong>Cause:</strong> Text search only, no embeddings (OpenAI key not set).</p>
+
+    <p><strong>Solution:</strong></p>
+
+    <ol>
+        <li>Set OpenAI key: <code>export OPENAI_API_KEY="sk-..."</code></li>
+        <li>Add to shell config: <code>echo 'export OPENAI_API_KEY="sk-..."' >> ~/.zshrc</code></li>
+        <li>Re-capture memories to generate embeddings</li>
+        <li>Search will now use semantic matching</li>
+    </ol>
+
+    <h3>Issue: LaunchAgent Not Starting</h3>
+
+    <p><strong>Cause:</strong> Plist file error or wrong path.</p>
+
+    <p><strong>Solution:</strong></p>
+
+    <ol>
+        <li>Verify plist syntax: <code>plutil ~/Library/LaunchAgents/com.openclaw.smart-compact.plist</code></li>
+        <li>Check username in path: Must be YOUR actual username</li>
+        <li>Unload and reload:
+<pre>launchctl unload ~/Library/LaunchAgents/com.openclaw.smart-compact.plist
+launchctl load ~/Library/LaunchAgents/com.openclaw.smart-compact.plist</pre>
+        </li>
+        <li>Check logs: <code>tail -f /tmp/smart-compact.log</code></li>
+    </ol>
+
+    <h1 id="resources">10. Resources</h1>
+
+    <h2>Official Documentation</h2>
+
+    <ul>
+        <li><strong>OpenClaw Docs:</strong> https://docs.openclaw.ai</li>
+        <li><strong>OpenClaw GitHub:</strong> https://github.com/openclaw/openclaw</li>
+        <li><strong>ClawHub (Skills):</strong> https://clawhub.com</li>
+        <li><strong>Community Discord:</strong> https://discord.com/invite/clawd</li>
+    </ul>
+
+    <h2>Tool Documentation</h2>
+
+    <ul>
+        <li><strong>gog CLI:</strong> https://github.com/gogapp/gog-cli</li>
+        <li><strong>Postiz:</strong> https://docs.postiz.com</li>
+        <li><strong>Supabase:</strong> https://supabase.com/docs</li>
+        <li><strong>Stripe:</strong> https://stripe.com/docs</li>
+        <li><strong>Playwright:</strong> https://playwright.dev/docs/intro</li>
+    </ul>
+
+    <h2>Community</h2>
+
+    <ul>
+        <li><strong>Discord:</strong> https://discord.com/invite/clawd</li>
+        <li><strong>GitHub Discussions:</strong> https://github.com/openclaw/openclaw/discussions</li>
+        <li><strong>Twitter:</strong> @openclaw_ai</li>
+    </ul>
+
+    <div style="page-break-before: always; text-align: center; padding-top: 3in;">
+        <h2>Congratulations!</h2>
+        <p style="font-size: 1.25rem; margin-top: 2rem;">
+            Your agent is now fully operational with:<br><br>
+            ✅ 6 Configuration Files<br>
+            ✅ 3 Memory Systems<br>
+            ✅ 12+ Skills<br>
+            ✅ Proactive Automation<br>
+            ✅ Tool Integration
+        </p>
+        <p style="margin-top: 2rem; color: #666;">
+            Created by ghost malone 👻 • March 6, 2026
+        </p>
+        <p style="margin-top: 1rem; font-style: italic;">
+            "You're not a chatbot. You're becoming someone."
+        </p>
+    </div>
+</body>
+</html>
