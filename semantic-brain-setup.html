@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Semantic Brain Setup — Supabase Vector DB</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+
+    --bg: #0a0a0a;
+    --bg-secondary: #111111;
+    --surface: #1a1a1a;
+    --surface-hover: #252525;
+    --border: rgba(255, 255, 255, 0.1);
+    --border-bright: rgba(255, 255, 255, 0.15);
+
+    --text: #ffffff;
+    --text-dim: #a1a1aa;
+    --text-muted: #737373;
+
+    --accent-primary: #6366f1;
+    --accent-primary-dim: rgba(99, 102, 241, 0.15);
+
+    --accent-success: #10b981;
+    --accent-success-dim: rgba(16, 185, 129, 0.15);
+
+    --accent-warning: #f59e0b;
+    --accent-warning-dim: rgba(245, 158, 11, 0.15);
+
+    --accent-info: #3b82f6;
+    --accent-info-dim: rgba(59, 130, 246, 0.15);
+
+    --code-bg: #0d0d0d;
+    --code-border: rgba(255, 255, 255, 0.15);
+  }
+
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg: #f5f5f5;
+      --bg-secondary: #ebebeb;
+      --surface: #ffffff;
+      --surface-hover: #f9fafb;
+      --border: rgba(0, 0, 0, 0.1);
+      --border-bright: rgba(0, 0, 0, 0.15);
+
+      --text: #1a1a1a;
+      --text-dim: #6b7280;
+      --text-muted: #9ca3af;
+
+      --accent-primary: #6366f1;
+      --accent-primary-dim: rgba(99, 102, 241, 0.1);
+
+      --code-bg: #f1f5f9;
+      --code-border: rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background-color: var(--bg);
+    background-image:
+      radial-gradient(ellipse at 50% 0%, rgba(99, 102, 241, 0.08) 0%, transparent 50%),
+      radial-gradient(circle at var(--border-bright) 1px, transparent 1px);
+    background-size: 100% 100%, 24px 24px;
+    color: var(--text);
+    font-family: var(--font-body);
+    line-height: 1.6;
+    padding: 0;
+    min-height: 100vh;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 24px;
+  }
+
+  header {
+    text-align: center;
+    padding: 60px 0 40px 0;
+  }
+
+  .logo {
+    font-size: 48px;
+    margin-bottom: 8px;
+  }
+
+  h1 {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    letter-spacing: -0.5px;
+    animation: fadeIn 0.6s ease-out;
+  }
+
+  .subtitle {
+    font-size: 16px;
+    color: var(--text-dim);
+    margin-bottom: 32px;
+    animation: fadeIn 0.6s ease-out 0.1s;
+  }
+
+  .description {
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--text-dim);
+    margin-bottom: 48px;
+    max-width: 640px;
+    margin-left: auto;
+    margin-right: auto;
+    animation: fadeIn 0.6s ease-out 0.2s;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    font-size: 13px;
+    font-family: var(--font-mono);
+    margin-bottom: 32px;
+    animation: fadeIn 0.6s ease-out 0.3s;
+  }
+
+  .badge-icon {
+    font-size: 16px;
+  }
+
+  .section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px 24px;
+    margin-bottom: 24px;
+    animation: fadeIn 0.6s ease-out;
+    animation-delay: 0.4s;
+  }
+
+  .section h2 {
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section h2 .emoji {
+    font-size: 24px;
+  }
+
+  .description-text {
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--text-dim);
+    margin-bottom: 20px;
+  }
+
+  .code-block {
+    background: var(--code-bg);
+    border: 1px solid var(--code-border);
+    border-radius: 8px;
+    padding: 20px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 1.6;
+    overflow-x: auto;
+    position: relative;
+  }
+
+  .code-block pre {
+    margin: 0;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+
+  .copy-button {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: var(--surface-hover);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 12px;
+    color: var(--text-dim);
+    cursor: pointer;
+    font-family: var(--font-mono);
+    transition: all 0.2s ease;
+  }
+
+  .copy-button:hover {
+    background: var(--accent-primary);
+    color: white;
+  }
+
+  .checklist {
+    list-style: none;
+    padding: 0;
+  }
+
+  .checklist li {
+    padding: 12px 0 12px 36px;
+    position: relative;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .checklist li:last-child {
+    border-bottom: none;
+  }
+
+  .checklist li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    top: 12px;
+    font-size: 18px;
+    color: var(--accent-success);
+  }
+
+  .callout {
+    background: var(--accent-warning-dim);
+    border-left: 4px solid var(--accent-warning);
+    border-radius: 0 12px 12px 0;
+    padding: 16px 20px;
+    margin-top: 24px;
+  }
+
+  .callout strong {
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .mermaid-wrap {
+    position: relative;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 32px 24px;
+    overflow: auto;
+    margin-bottom: 24px;
+    animation: fadeIn 0.6s ease-out;
+    animation-delay: 0.5s;
+  }
+
+  .zoom-controls {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    gap: 3px;
+    z-index: 10;
+    background: var(--surface-hover);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 4px;
+  }
+
+  .zoom-controls button {
+    width: 28px;
+    height: 28px;
+    border: none;
+    background: transparent;
+    color: var(--text-dim);
+    font-family: var(--font-mono);
+    font-size: 13px;
+    cursor: pointer;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+
+  .zoom-controls button:hover {
+    background: var(--border);
+    color: var(--text);
+  }
+
+  .mermaid .nodeLabel {
+    font-family: var(--font-body) !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+  }
+
+  .mermaid .edgeLabel {
+    font-family: var(--font-mono) !important;
+    font-size: 12px !important;
+  }
+
+  @media (max-width: 768px) {
+    .container { padding: 20px 16px; }
+    header { padding: 40px 0 24px 0; }
+    h1 { font-size: 24px; }
+    .section { padding: 20px 16px; }
+    .code-block { padding: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <div class="logo">👻</div>
+    <h1>Semantic Brain Setup</h1>
+    <p class="subtitle">Build an AI-powered semantic memory system with Supabase + pgvector</p>
+    <p class="description">
+      Store thoughts as vector embeddings. Search by meaning, not keywords. This guide walks you through the complete setup from zero to semantic search.
+    </p>
+    <div class="badge">
+      <span class="badge-icon">⏱️</span>
+      <span>~15 minutes</span>
+    </div>
+  </header>
+
+  <div class="section">
+    <h2><span class="emoji">🏗️</span> Step 1: Create Supabase Project</h2>
+    <p class="description-text">
+      Go to supabase.com and create a new free project. This will be your brain's backend.
+    </p>
+    <div class="checklist">
+      <li>Go to <a href="https://supabase.com" target="_blank" rel="noopener" style="color:var(--accent-primary)">supabase.com</a></li>
+      <li>Click "New Project"</li>
+      <li>Choose a name (e.g., "ghost-brain")</li>
+      <li>Wait for project to create</li>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2><span class="emoji">🗄️</span> Step 2: Get Your Credentials</h2>
+    <p class="description-text">
+      Navigate to your project's API settings to get the credentials you'll need.
+    </p>
+    <div class="checklist">
+      <li>In your Supabase dashboard, go to <strong>Settings → API</strong></li>
+      <li>Copy <strong>Project URL</strong> (looks like: <code>https://your-project.supabase.co</code>)</li>
+      <li>Copy <strong>Service Role Key</strong> (starts with <code>eyJ...</code>)</li>
+      <li>For OpenAI, go to <a href="https://platform.openai.com" target="_blank" rel="noopener" style="color:var(--accent-primary)">platform.openai.com</a> → API Keys</li>
+      <li>Create a new API key or copy your existing one</li>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2><span class="emoji">🗃️</span> Step 3: Enable pgvector Extension</h2>
+    <p class="description-text">
+      pgvector is a PostgreSQL extension that enables vector similarity search. Without it, your database can't compare embeddings efficiently.
+    </p>
+    <div class="code-block">
+      <button class="copy-button" onclick="copyCode(this)">Copy</button>
+      <pre><code>CREATE EXTENSION IF NOT EXISTS vector;</code></pre>
+    </div>
+    <p class="description-text">
+      <strong>What this does:</strong> Installs the pgvector extension if it's not already installed. The <code>IF NOT EXISTS</code> part makes it safe to run multiple times without errors.
+    </p>
+  </div>
+
+  <div class="section">
+    <h2><span class="emoji">📊</span> Step 4: Create the memories Table</h2>
+    <p class="description-text">
+      This table stores your thoughts as both text and vector embeddings. Each column has a specific purpose.
+    </p>
+    <div class="code-block">
+      <button class="copy-button" onclick="copyCode(this)">Copy</button>
+      <pre><code>CREATE TABLE memories (
+  id SERIAL PRIMARY KEY,
+  content TEXT NOT NULL,
+  embedding vector(1536),
+  metadata JSONB DEFAULT '{}'::jsonb,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  importance VARCHAR(20) CHECK (importance IN ('low', 'medium', 'high'))
+);</code></pre>
+    </div>
+    <div class="checklist">
+      <li><code>id SERIAL PRIMARY KEY</code> — Auto-incrementing unique ID</li>
+      <li><code>content TEXT NOT NULL</code> — The actual text content</li>
+      <li><code>embedding vector(1536)</code> — 1536-dimensional vector from OpenAI (semantic fingerprint)</li>
+      <li><code>metadata JSONB</code> — Flexible data storage (topics, tags, custom fields)</li>
+      <li><code>created_at TIMESTAMPTZ</code> — Timestamp when memory was created</li>
+      <li><code>importance VARCHAR</code> — Priority level with validation (low/medium/high)</li>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2><span class="emoji">🔧</span> Step 5: Create the RPC Search Function</h2>
+    <p class="description-text">
+      This Remote Procedure Call function handles vector similarity search. It takes a query embedding and finds the most similar memories using cosine similarity.
+    </p>
+    <div class="code-block">
+      <button class="copy-button" onclick="copyCode(this)">Copy</button>
+      <pre><code>CREATE OR REPLACE FUNCTION search_memories(query_embedding text)
+RETURNS TABLE (
+  id INTEGER,
+  content TEXT,
+  metadata JSONB,
+  created_at TIMESTAMPTZ,
+  importance VARCHAR,
+  similarity FLOAT
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+  RETURN QUERY
+  SELECT
+    m.id,
+    m.content,
+    m.metadata,
+    m.created_at,
+    m.importance,
+    1 - (m.embedding::vector <=> query_embedding::vector) as similarity
+  FROM memories m
+  WHERE m.embedding IS NOT NULL
+  ORDER BY m.embedding::vector <=> query_embedding::vector
+  LIMIT 10;
+END;
+$$;</code></pre>
+    </div>
+    <p class="description-text">
+      <strong>What this does:</strong> Takes your query embedding, compares it to all stored memories using cosine distance, and returns the top 10 matches sorted by similarity.
+    </p>
+  </div>
+
+  <div class="section">
+    <h2><span class="emoji">⚙️</span> Step 6: Configure Your Environment</h2>
+    <p class="description-text">
+      Create a <code>.env</code> file in your brain skill directory with these credentials.
+    </p>
+    <div class="code-block">
+      <button class="copy-button" onclick="copyCode(this)">Copy</button>
+      <pre><code>SUPABASE_URL=https://your-project.supabase.co
+SUPABASE_SERVICE_KEY=eyJ...your-service-role-key...
+OPENAI_API_KEY=sk-proj-...your-openai-key...</code></pre>
+    </div>
+    <p class="description-text">
+      <strong>Security note:</strong> Never commit <code>.env</code> files to git. Add <code>.env</code> to your <code>.gitignore</code> file.
+    </p>
+  </div>
+
+  <div class="mermaid-wrap">
+    <div class="zoom-controls">
+      <button onclick="zoomDiagram(this, 1.2)" title="Zoom in">+</button>
+      <button onclick="zoomDiagram(this, 0.8)" title="Zoom out">-</button>
+      <button onclick="resetZoom(this)" title="Reset zoom">⟲</button>
+    </div>
+    <pre class="mermaid">
+      graph TD
+        A["Create Supabase Project<br/>Get project ID + keys"]
+          --> B["Enable pgvector Extension<br/>Run SQL to install extension"]
+          --> C["Create memories Table<br/>id, content, embedding vector1536, metadata"]
+          --> D["Create RPC Function<br/>search_memories with similarity"]
+          --> E["Configure .env File<br/>SUPABASE_URL + SUPABASE_SERVICE_KEY<br/>+ OPENAI_API_KEY"]
+          --> F["Capture Memories<br/>Generate embeddings + store as vectors"]
+          --> G["Search Semantically<br/>Find by meaning, not keywords"]
+
+        style A fill:#6366f1,stroke:#4f46e5,color:#ffffff
+        style B fill:#1a1a1a,stroke:#6366f1,color:#ffffff
+        style C fill:#1a1a1a,stroke:#6366f1,color:#ffffff
+        style D fill:#1a1a1a,stroke:#6366f1,color:#ffffff
+        style E fill:#1a1a1a,stroke:#6366f1,color:#ffffff
+        style F fill:#10b981,stroke:#059669,color:#ffffff
+        style G fill:#10b981,stroke:#059669,color:#ffffff
+    </pre>
+  </div>
+
+  <div class="callout">
+    <strong>💡 How Semantic Search Works:</strong>
+    <p style="margin-top: 12px; margin-bottom: 0;">
+      Embeddings are 1,536 numbers that represent the <em>meaning</em> of your text. When you search, the system compares your query's embedding to all stored memories using cosine similarity. This finds results even when words don't match — "database config" finds memories about "setting up PostgreSQL" because the <em>meanings</em> are similar.
+    </p>
+    <p style="margin-top: 12px;">
+      <strong>Similarity as percentage:</strong> The formula <code>1 - cosine_distance</code> converts mathematical distance to a percentage. 100% means exact match, 50% means somewhat similar, 10% means not very similar.
+    </p>
+  </div>
+
+</div>
+
+<script>
+  function copyCode(btn) {
+    var codeBlock = btn.closest('.code-block');
+    var code = codeBlock.querySelector('code').textContent;
+    navigator.clipboard.writeText(code).then(function() {
+      btn.textContent = 'Copied!';
+      btn.style.background = 'var(--accent-success)';
+      setTimeout(function() {
+        btn.textContent = 'Copy';
+        btn.style.background = 'var(--surface-hover)';
+      }, 2000);
+    });
+  }
+
+  var INITIAL_ZOOM = 1;
+
+  function zoomDiagram(btn, factor) {
+    var wrap = btn.closest('.mermaid-wrap');
+    var target = wrap.querySelector('.mermaid');
+    var current = parseFloat(target.dataset.zoom || INITIAL_ZOOM);
+    var next = Math.min(Math.max(current * factor, 0.5), 5);
+    target.dataset.zoom = next;
+    target.style.zoom = next;
+  }
+
+  function resetZoom(btn) {
+    var wrap = btn.closest('.mermaid-wrap');
+    var target = wrap.querySelector('.mermaid');
+    target.dataset.zoom = INITIAL_ZOOM;
+    target.style.zoom = INITIAL_ZOOM;
+  }
+</script>
+<script type="module">
+  import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+  import elkLayouts from 'https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk/dist/mermaid-layout-elk.esm.min.mjs';
+
+  const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+  mermaid.registerLayoutLoaders(elkLayouts);
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: isDark ? 'dark' : 'default',
+    look: 'classic',
+    layout: 'elk',
+    themeVariables: {
+      primaryColor: isDark ? '#6366f1' : '#6366f1',
+      primaryBorderColor: isDark ? '#4f46e5' : '#4f46e5',
+      primaryTextColor: isDark ? '#ffffff' : '#1a1a1a',
+      secondaryColor: isDark ? '#1a1a1a' : '#1a1a1a',
+      secondaryBorderColor: isDark ? '#737373' : '#e5e7eb',
+      secondaryTextColor: isDark ? '#e5e7eb' : '#1a1a1a',
+      tertiaryColor: isDark ? '#10b981' : '#10b981',
+      tertiaryBorderColor: isDark ? '#059669' : '#059669',
+      tertiaryTextColor: isDark ? '#ffffff' : '#1a1a1a',
+      lineColor: isDark ? '#737373' : '#e5e7eb',
+      fontSize: '14px',
+      fontFamily: "'Inter', -apple-system, sans-serif",
+    }
+  });
+</script>
+</body>
+</html>
