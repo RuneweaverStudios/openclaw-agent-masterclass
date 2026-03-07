@@ -1154,51 +1154,65 @@
         </div>
     </section>
 
-    <!-- ═══════════ QUICK START ═══════════ -->
-    <section class="quickstart-section">
+    <!-- ═══════════ ONE-COMMAND INSTALL ═══════════ -->
+    <section class="quickstart-section" id="install">
         <div class="section-header reveal">
-            <div class="section-tag" style="color:var(--glow-amber); border:1px solid rgba(255,171,0,0.2); background:rgba(255,171,0,0.05);">Quick Start</div>
-            <h2 class="section-title">Get Started Now</h2>
+            <div class="section-tag" style="color:var(--glow-amber); border:1px solid rgba(255,171,0,0.2); background:rgba(255,171,0,0.05);">Install</div>
+            <h2 class="section-title">One Command. Full Agent.</h2>
+            <p style="color:var(--text-secondary); font-weight:300; font-size:1.05rem; margin-top:0.5rem; max-width:520px;">Run this in your terminal. It asks your agent's name, sets up the entire directory structure, and you're ready to go.</p>
+        </div>
+
+        <div class="reveal" style="margin-bottom:2rem;">
+            <div class="qs-card" style="position:relative;">
+                <div class="qs-step" style="margin-bottom:0.5rem;">Copy &amp; paste into your terminal</div>
+                <div class="qs-code" id="installCmd" style="font-size:0.85rem; line-height:2; cursor:pointer;" onclick="copyInstall()" title="Click to copy"><span class="cmd">curl</span> -fsSL <span class="string">https://raw.githubusercontent.com/RuneweaverStudios/openclaw-agent-masterclass/main/install.sh</span> | <span class="cmd">bash</span></div>
+                <button onclick="copyInstall()" style="position:absolute; top:1rem; right:1rem; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); color:var(--text-secondary); padding:0.35rem 0.75rem; border-radius:8px; font-family:var(--font-body); font-size:0.72rem; cursor:pointer; transition:all 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='rgba(255,255,255,0.06)'" id="copyBtn">Copy</button>
+            </div>
         </div>
 
         <div class="quickstart-grid reveal-stagger">
             <div class="qs-card">
-                <div class="qs-step">Step 01</div>
-                <div class="qs-title">Clone the Repo</div>
-                <div class="qs-code"><span class="cmd">git clone</span> <span class="string">https://github.com/RuneweaverStudios/openclaw-agent-masterclass.git</span>
-<span class="cmd">cd</span> openclaw-agent-masterclass</div>
-            </div>
-            <div class="qs-card">
-                <div class="qs-step">Step 02</div>
-                <div class="qs-title">Read the Guide</div>
-                <div class="qs-code"><span class="comment"># Full markdown guide</span>
-<span class="cmd">cat</span> GUIDE.md
-
-<span class="comment"># Or view in browser</span>
-<span class="cmd">open</span> MASTERCLASS.html</div>
-            </div>
-            <div class="qs-card">
-                <div class="qs-step">Step 03</div>
-                <div class="qs-title">Follow the Phases</div>
-                <p class="qs-text">Complete each phase in order. Each one builds on the previous.</p>
+                <div class="qs-step">What it does</div>
+                <div class="qs-title">Interactive Setup</div>
+                <p class="qs-text">Asks for your agent's name, emoji, vibe, and your info. Then scaffolds everything automatically.</p>
                 <ul class="qs-list">
-                    <li>Phase 1: Identity (15 min)</li>
-                    <li>Phase 2: Memory (30 min)</li>
-                    <li>Phase 3: Skills (45 min)</li>
-                    <li>Phase 4: Automation (20 min)</li>
-                    <li>Phase 5: Tools (30 min)</li>
-                    <li>Phase 6: Testing (15 min)</li>
+                    <li>7 config files, personalized</li>
+                    <li>Memory directory + first daily log</li>
+                    <li>Skill directories ready</li>
+                    <li>.gitignore to protect secrets</li>
                 </ul>
             </div>
             <div class="qs-card">
-                <div class="qs-step">Step 04</div>
-                <div class="qs-title">Verify Setup</div>
-                <div class="qs-code"><span class="comment"># Test semantic memory</span>
-<span class="cmd">cd</span> ~/.openclaw/workspace/skills/brain
-<span class="cmd">node</span> scripts/capture-rest.mjs <span class="string">"Test: Setup complete"</span>
-
-<span class="comment"># Test Smart Compact</span>
-<span class="cmd">node</span> skills/smart-compact/scripts/compact.mjs</div>
+                <div class="qs-step">What you get</div>
+                <div class="qs-title">Full Agent Scaffold</div>
+                <div class="qs-code"><span class="comment">~/.openclaw/workspace/</span>
+<span class="string">IDENTITY.md</span>    <span class="comment"># who your agent is</span>
+<span class="string">SOUL.md</span>        <span class="comment"># personality & values</span>
+<span class="string">USER.md</span>        <span class="comment"># context about you</span>
+<span class="string">AGENTS.md</span>      <span class="comment"># session boot rules</span>
+<span class="string">MEMORY.md</span>      <span class="comment"># long-term memory</span>
+<span class="string">HEARTBEAT.md</span>   <span class="comment"># proactive checks</span>
+<span class="string">TOOLS.md</span>       <span class="comment"># tool credentials</span>
+<span class="string">memory/</span>        <span class="comment"># daily logs</span>
+<span class="string">skills/</span>        <span class="comment"># installed skills</span></div>
+            </div>
+            <div class="qs-card">
+                <div class="qs-step">Then customize</div>
+                <div class="qs-title">Make It Yours</div>
+                <p class="qs-text">Edit the generated files to match your style, install skills, and connect tools.</p>
+                <ul class="qs-list">
+                    <li>Tweak SOUL.md for personality</li>
+                    <li>Add context to USER.md</li>
+                    <li>Install skills: <code style="background:rgba(255,255,255,0.06);color:var(--glow-cyan);padding:0.1rem 0.4rem;border-radius:4px;font-size:0.78rem;">clawhub install brain</code></li>
+                    <li>Set up Brain database</li>
+                </ul>
+            </div>
+            <div class="qs-card">
+                <div class="qs-step">Or do it manually</div>
+                <div class="qs-title">Clone &amp; Follow Guide</div>
+                <div class="qs-code"><span class="cmd">git clone</span> <span class="string">https://github.com/RuneweaverStudios/openclaw-agent-masterclass.git</span>
+<span class="cmd">cd</span> openclaw-agent-masterclass
+<span class="cmd">cat</span> GUIDE.md</div>
             </div>
         </div>
     </section>
@@ -1373,6 +1387,22 @@
 
     els.forEach(el => observer.observe(el));
 })();
+
+// Copy install command
+function copyInstall() {
+    const cmd = 'curl -fsSL https://raw.githubusercontent.com/RuneweaverStudios/openclaw-agent-masterclass/main/install.sh | bash';
+    navigator.clipboard.writeText(cmd).then(() => {
+        const btn = document.getElementById('copyBtn');
+        btn.textContent = 'Copied!';
+        btn.style.color = '#00e676';
+        btn.style.borderColor = 'rgba(0,230,118,0.3)';
+        setTimeout(() => {
+            btn.textContent = 'Copy';
+            btn.style.color = '';
+            btn.style.borderColor = '';
+        }, 2000);
+    });
+}
 </script>
 
 </body>
