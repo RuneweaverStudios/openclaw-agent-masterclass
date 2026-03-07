@@ -13,39 +13,35 @@
     <meta property="og:description" content="From Zero to Ghost — Complete setup guide for autonomous AI agents">
     <meta property="og:type" content="website">
     
-    <!-- Fonts -->
+    <!-- Pixel Art Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            /* Blueprint aesthetic */
-            --bg: #f8fafb;
-            --surface: #ffffff;
-            --surface-raised: #fefefe;
-            --border: rgba(0,0,0,0.08);
-            --border-strong: rgba(0,0,0,0.15);
-            --text: #0f172a;
-            --text-dim: #475569;
-            --text-dimmed: #94a3b8;
+            /* Pixel Art Colors - Star Office Style */
+            --bg: #1a1a2e;
+            --bg-light: #16213e;
+            --surface: #0f3460;
+            --surface-light: #1e3a5f;
+            --border: #e94560;
+            --border-alt: #0ea5e9;
             
-            /* Slate/blue palette */
-            --accent-primary: #0ea5e9;
-            --accent-primary-dim: rgba(14, 165, 233, 0.1);
-            --accent-secondary: #6366f1;
-            --accent-secondary-dim: rgba(99, 102, 241, 0.1);
+            --text: #eaeaea;
+            --text-dim: #a0a0a0;
+            --text-dimmed: #6b6b6b;
+            
+            /* Accent Colors */
+            --accent-primary: #ffd700;
+            --accent-secondary: #22c55e;
             --accent-tertiary: #8b5cf6;
-            --accent-tertiary-dim: rgba(139, 92, 246, 0.1);
-            --accent-success: #10b981;
-            --accent-success-dim: rgba(16, 185, 129, 0.1);
             --accent-warning: #f59e0b;
-            --accent-warning-dim: rgba(245, 158, 11, 0.1);
+            --accent-error: #ef4444;
             
             /* Fonts */
-            --font-display: 'Crimson Pro', Georgia, serif;
+            --font-pixel: 'Press Start 2P', monospace;
             --font-body: 'Inter', -apple-system, sans-serif;
-            --font-mono: 'JetBrains Mono', 'Courier New', monospace;
             
             /* Spacing */
             --space-xs: 0.25rem;
@@ -55,25 +51,6 @@
             --space-xl: 2rem;
             --space-2xl: 3rem;
             --space-3xl: 4rem;
-        }
-
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --bg: #0f172a;
-                --surface: #1e293b;
-                --surface-raised: #334155;
-                --border: rgba(255,255,255,0.08);
-                --border-strong: rgba(255,255,255,0.15);
-                --text: #f1f5f9;
-                --text-dim: #cbd5e1;
-                --text-dimmed: #64748b;
-                
-                --accent-primary-dim: rgba(14, 165, 233, 0.15);
-                --accent-secondary-dim: rgba(99, 102, 241, 0.15);
-                --accent-tertiary-dim: rgba(139, 92, 246, 0.15);
-                --accent-success-dim: rgba(16, 185, 129, 0.15);
-                --accent-warning-dim: rgba(245, 158, 11, 0.15);
-            }
         }
 
         * {
@@ -89,23 +66,41 @@
             line-height: 1.6;
             font-size: 15px;
             position: relative;
+            overflow-x: hidden;
         }
 
-        /* Blueprint grid background */
+        /* Pixel Grid Background */
         body::before {
             content: '';
             position: fixed;
             inset: 0;
             background-image: 
-                linear-gradient(var(--border) 1px, transparent 1px),
-                linear-gradient(90deg, var(--border) 1px, transparent 1px);
-            background-size: 40px 40px;
+                linear-gradient(rgba(233, 69, 96, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(233, 69, 96, 0.03) 1px, transparent 1px);
+            background-size: 20px 20px;
             pointer-events: none;
             z-index: 0;
         }
 
+        /* Scanline Effect */
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.1) 0px,
+                rgba(0, 0, 0, 0.1) 1px,
+                transparent 1px,
+                transparent 2px
+            );
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.3;
+        }
+
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             padding: 0 var(--space-xl);
             position: relative;
@@ -116,44 +111,60 @@
         header {
             padding: var(--space-3xl) 0;
             text-align: center;
-            margin-bottom: var(--space-3xl);
+            position: relative;
+        }
+
+        .pixel-border {
+            border: 4px solid var(--border);
+            box-shadow: 
+                4px 4px 0 var(--border),
+                -4px -4px 0 var(--border),
+                4px -4px 0 var(--border),
+                -4px 4px 0 var(--border);
         }
 
         .logo {
-            font-family: var(--font-display);
-            font-size: 1.5rem;
-            font-weight: 700;
+            font-family: var(--font-pixel);
+            font-size: 0.75rem;
             color: var(--accent-primary);
             text-decoration: none;
             margin-bottom: var(--space-lg);
             display: inline-block;
+            padding: var(--space-md) var(--space-lg);
+            background: var(--surface);
+            animation: blink 2s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
         }
 
         h1 {
-            font-family: var(--font-display);
-            font-size: 4rem;
-            font-weight: 700;
-            line-height: 1.1;
+            font-family: var(--font-pixel);
+            font-size: 2rem;
+            font-weight: 400;
+            line-height: 1.3;
             margin-bottom: var(--space-lg);
-            letter-spacing: -0.03em;
-            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            letter-spacing: 0.05em;
+            color: var(--accent-primary);
+            text-shadow: 4px 4px 0 var(--surface);
         }
 
         .subtitle {
-            font-size: 1.5rem;
+            font-family: var(--font-pixel);
+            font-size: 0.625rem;
             color: var(--text-dim);
             margin-bottom: var(--space-xl);
-            font-family: var(--font-display);
+            letter-spacing: 0.1em;
         }
 
         .header-meta {
             display: flex;
             justify-content: center;
             gap: var(--space-xl);
-            font-size: 0.875rem;
+            font-family: var(--font-pixel);
+            font-size: 0.5rem;
             color: var(--text-dimmed);
             flex-wrap: wrap;
         }
@@ -162,11 +173,9 @@
             display: flex;
             align-items: center;
             gap: var(--space-sm);
-        }
-
-        .header-meta strong {
-            color: var(--text-dim);
-            font-weight: 600;
+            padding: var(--space-sm) var(--space-md);
+            background: var(--surface);
+            border: 2px solid var(--border-alt);
         }
 
         /* CTA Buttons */
@@ -183,42 +192,50 @@
             align-items: center;
             gap: var(--space-sm);
             padding: var(--space-md) var(--space-xl);
-            font-family: var(--font-body);
-            font-size: 1rem;
-            font-weight: 600;
+            font-family: var(--font-pixel);
+            font-size: 0.5rem;
+            font-weight: 400;
             text-decoration: none;
-            border-radius: 8px;
-            transition: all 0.2s ease;
+            border: 4px solid var(--border);
             cursor: pointer;
-            border: none;
+            transition: all 0.1s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
 
         .btn-primary {
             background: var(--accent-primary);
-            color: white;
+            color: var(--bg);
+            box-shadow: 4px 4px 0 var(--surface);
         }
 
         .btn-primary:hover {
-            background: #0284c7;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 16px rgba(14, 165, 233, 0.3);
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0 var(--surface);
+        }
+
+        .btn-primary:active {
+            transform: translate(4px, 4px);
+            box-shadow: none;
         }
 
         .btn-secondary {
             background: var(--surface);
             color: var(--text);
-            border: 1px solid var(--border-strong);
+            box-shadow: 4px 4px 0 var(--border-alt);
         }
 
         .btn-secondary:hover {
             border-color: var(--accent-primary);
             color: var(--accent-primary);
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0 var(--border-alt);
         }
 
         /* Stats */
         .stats {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
             gap: var(--space-lg);
             margin: var(--space-3xl) 0;
         }
@@ -227,21 +244,21 @@
             text-align: center;
             padding: var(--space-xl);
             background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 8px;
+            border: 4px solid var(--border-alt);
+            box-shadow: 4px 4px 0 var(--border);
         }
 
         .stat-number {
-            font-family: var(--font-display);
-            font-size: 3rem;
-            font-weight: 700;
+            font-family: var(--font-pixel);
+            font-size: 2.5rem;
             color: var(--accent-primary);
             line-height: 1;
             margin-bottom: var(--space-sm);
         }
 
         .stat-label {
-            font-size: 0.875rem;
+            font-family: var(--font-pixel);
+            font-size: 0.5rem;
             color: var(--text-dim);
             text-transform: uppercase;
             letter-spacing: 0.1em;
@@ -256,73 +273,67 @@
             display: inline-flex;
             align-items: center;
             gap: var(--space-sm);
-            font-family: var(--font-mono);
-            font-size: 0.75rem;
-            font-weight: 600;
+            font-family: var(--font-pixel);
+            font-size: 0.5rem;
             text-transform: uppercase;
             letter-spacing: 0.1em;
-            color: var(--text-dim);
+            color: var(--accent-primary);
             margin-bottom: var(--space-lg);
-            padding: var(--space-xs) var(--space-md);
+            padding: var(--space-sm) var(--space-md);
             background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 4px;
+            border: 2px solid var(--border);
         }
 
         .section-label::before {
-            content: '';
-            width: 8px;
-            height: 8px;
-            border-radius: 2px;
-            background: var(--accent-primary);
+            content: '>';
+            animation: blink 1s infinite;
         }
 
         .section-title {
-            font-family: var(--font-display);
-            font-size: 2.5rem;
-            font-weight: 700;
+            font-family: var(--font-pixel);
+            font-size: 1.25rem;
             margin-bottom: var(--space-lg);
-            letter-spacing: -0.02em;
+            letter-spacing: 0.05em;
+            color: var(--accent-primary);
         }
 
         .section-description {
-            font-size: 1.125rem;
+            font-size: 1rem;
             color: var(--text-dim);
             max-width: 800px;
             margin-bottom: var(--space-xl);
+            line-height: 1.8;
         }
 
         /* Phase cards */
         .phase-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
             gap: var(--space-lg);
         }
 
         .phase-card {
             background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 8px;
+            border: 4px solid var(--border-alt);
             padding: var(--space-xl);
-            transition: all 0.2s ease;
             position: relative;
+            box-shadow: 4px 4px 0 var(--border);
+            transition: all 0.1s ease;
         }
 
         .phase-card:hover {
-            border-color: var(--border-strong);
-            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
-            transform: translateY(-4px);
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0 var(--border);
+            border-color: var(--accent-primary);
         }
 
         .phase-number {
             position: absolute;
             top: var(--space-md);
             right: var(--space-md);
-            font-family: var(--font-mono);
-            font-size: 0.75rem;
-            font-weight: 700;
+            font-family: var(--font-pixel);
+            font-size: 0.5rem;
             color: var(--text-dimmed);
-            opacity: 0.5;
         }
 
         .phase-header {
@@ -330,32 +341,31 @@
             justify-content: space-between;
             align-items: start;
             margin-bottom: var(--space-md);
+            gap: var(--space-md);
         }
 
         .phase-title {
-            font-family: var(--font-mono);
-            font-size: 1.125rem;
-            font-weight: 600;
+            font-family: var(--font-pixel);
+            font-size: 0.625rem;
+            color: var(--accent-primary);
         }
 
         .phase-duration {
-            font-family: var(--font-mono);
-            font-size: 0.75rem;
-            font-weight: 600;
+            font-family: var(--font-pixel);
+            font-size: 0.5rem;
             padding: var(--space-xs) var(--space-sm);
-            border-radius: 4px;
-            background: var(--accent-primary-dim);
-            color: var(--accent-primary);
+            background: var(--accent-secondary);
+            color: var(--bg);
         }
 
         .phase-description {
             color: var(--text-dim);
             margin-bottom: var(--space-md);
-            font-size: 0.9375rem;
+            font-size: 0.875rem;
         }
 
         .phase-content {
-            font-size: 0.875rem;
+            font-size: 0.8125rem;
             color: var(--text-dim);
         }
 
@@ -371,12 +381,12 @@
         }
 
         .phase-content li::before {
-            content: '→';
+            content: '>';
             position: absolute;
             left: 0;
-            color: var(--text-dimmed);
-            font-family: var(--font-mono);
-            font-size: 0.75rem;
+            color: var(--border);
+            font-family: var(--font-pixel);
+            font-size: 0.625rem;
         }
 
         /* Features */
@@ -389,33 +399,34 @@
         .feature-card {
             padding: var(--space-xl);
             background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 8px;
+            border: 4px solid var(--border-alt);
             text-align: center;
+            box-shadow: 4px 4px 0 var(--border);
         }
 
         .feature-icon {
-            font-size: 2.5rem;
+            font-size: 3rem;
             margin-bottom: var(--space-md);
+            display: block;
         }
 
         .feature-title {
-            font-family: var(--font-mono);
-            font-size: 1.125rem;
-            font-weight: 600;
+            font-family: var(--font-pixel);
+            font-size: 0.625rem;
             margin-bottom: var(--space-sm);
+            color: var(--accent-primary);
         }
 
         .feature-description {
             color: var(--text-dim);
-            font-size: 0.875rem;
+            font-size: 0.8125rem;
         }
 
         /* Footer */
         footer {
             margin-top: var(--space-3xl);
             padding: var(--space-3xl) 0;
-            border-top: 2px solid var(--border-strong);
+            border-top: 4px solid var(--border);
             text-align: center;
         }
 
@@ -425,15 +436,16 @@
         }
 
         .footer-logo {
-            font-family: var(--font-display);
-            font-size: 2rem;
-            font-weight: 700;
+            font-family: var(--font-pixel);
+            font-size: 0.75rem;
             margin-bottom: var(--space-lg);
+            color: var(--accent-primary);
         }
 
         .footer-text {
             color: var(--text-dim);
             margin-bottom: var(--space-xl);
+            font-size: 0.875rem;
         }
 
         .footer-links {
@@ -447,8 +459,10 @@
         .footer-links a {
             color: var(--text-dim);
             text-decoration: none;
-            font-size: 0.875rem;
+            font-size: 0.8125rem;
             transition: color 0.2s;
+            font-family: var(--font-pixel);
+            font-size: 0.5rem;
         }
 
         .footer-links a:hover {
@@ -456,27 +470,95 @@
         }
 
         .footer-meta {
-            font-size: 0.875rem;
+            font-family: var(--font-pixel);
+            font-size: 0.5rem;
             color: var(--text-dimmed);
+        }
+
+        /* Code blocks */
+        pre {
+            background: var(--bg-light);
+            border: 2px solid var(--border-alt);
+            padding: var(--space-lg);
+            margin: var(--space-md) 0;
+            overflow-x: auto;
+            font-family: var(--font-pixel);
+            font-size: 0.5rem;
+            line-height: 1.8;
+        }
+
+        code {
+            font-family: var(--font-pixel);
+            background: var(--surface);
+            padding: 0.125rem 0.375rem;
+            border: 1px solid var(--border-alt);
+            font-size: 0.5rem;
+        }
+
+        /* Office Preview */
+        .office-preview {
+            margin: var(--space-2xl) 0;
+            padding: var(--space-xl);
+            background: var(--surface);
+            border: 4px solid var(--border);
+            text-align: center;
+        }
+
+        .office-preview-title {
+            font-family: var(--font-pixel);
+            font-size: 0.625rem;
+            color: var(--accent-primary);
+            margin-bottom: var(--space-lg);
+        }
+
+        .office-states {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-lg);
+            margin-top: var(--space-lg);
+        }
+
+        .office-state {
+            padding: var(--space-lg);
+            background: var(--bg);
+            border: 2px solid var(--border-alt);
+        }
+
+        .office-state-icon {
+            font-size: 2.5rem;
+            margin-bottom: var(--space-sm);
+        }
+
+        .office-state-name {
+            font-family: var(--font-pixel);
+            font-size: 0.5rem;
+            color: var(--accent-primary);
+            margin-bottom: var(--space-xs);
+        }
+
+        .office-state-desc {
+            font-size: 0.75rem;
+            color: var(--text-dim);
         }
 
         /* Responsive */
         @media (max-width: 768px) {
             h1 {
-                font-size: 2.5rem;
-            }
-
-            .subtitle {
                 font-size: 1.25rem;
             }
 
+            .subtitle {
+                font-size: 0.5rem;
+            }
+
             .section-title {
-                font-size: 2rem;
+                font-size: 1rem;
             }
 
             .header-meta {
                 flex-direction: column;
                 gap: var(--space-sm);
+                align-items: center;
             }
 
             .cta-group {
@@ -486,57 +568,52 @@
 
             .btn {
                 width: 100%;
-                max-width: 300px;
+                max-width: 320px;
                 justify-content: center;
             }
-        }
 
-        /* Animation */
-        @keyframes fadeUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
+            .office-states {
+                grid-template-columns: 1fr;
             }
         }
 
-        .phase-card, .feature-card, .stat-card {
-            animation: fadeUp 0.5s ease-out;
+        /* Glitch Effect */
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); }
         }
 
-        @media (prefers-reduced-motion: reduce) {
-            .phase-card, .feature-card, .stat-card {
-                animation: none;
-            }
+        .glitch:hover {
+            animation: glitch 0.3s ease infinite;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <a href="/" class="logo">OpenClaw</a>
-            <h1>Agent Masterclass</h1>
-            <p class="subtitle">From Zero to Ghost — Complete Setup Guide</p>
+            <a href="/" class="logo pixel-border glitch">> OPENCLAW_</a>
+            <h1>AGENT MASTERCLASS</h1>
+            <p class="subtitle">FROM ZERO TO GHOST — COMPLETE SETUP GUIDE</p>
             
             <div class="header-meta">
-                <div><strong>Duration:</strong> 2-3 hours</div>
-                <div><strong>Difficulty:</strong> Intermediate</div>
-                <div><strong>Prerequisites:</strong> OpenClaw installed</div>
+                <div>> DURATION: 2-3 HRS</div>
+                <div>> DIFFICULTY: INTERMEDIATE</div>
+                <div>> PREREQUISITES: OPENCLAW INSTALLED</div>
             </div>
 
             <div class="cta-group">
                 <a href="#phases" class="btn btn-primary">
-                    <span>Get Started</span>
-                    <span>→</span>
+                    > GET STARTED
                 </a>
-                <a href="https://github.com/openclaw/agent-masterclass" class="btn btn-secondary">
-                    <span>View on GitHub</span>
+                <a href="https://github.com/RuneweaverStudios/openclaw-agent-masterclass" class="btn btn-secondary">
+                    > VIEW ON GITHUB
                 </a>
                 <a href="GUIDE.md" class="btn btn-secondary">
-                    <span>Read Full Guide</span>
+                    > READ FULL GUIDE
                 </a>
             </div>
         </header>
@@ -561,29 +638,56 @@
             </div>
         </div>
 
+        <!-- Office Preview -->
+        <div class="office-preview">
+            <div class="office-preview-title">> OFFICE STATE VISUALIZATION</div>
+            <p style="color: var(--text-dim); font-size: 0.875rem;">
+                Your agent's office shows real-time status with pixel art characters
+            </p>
+            
+            <div class="office-states">
+                <div class="office-state">
+                    <div class="office-state-icon">🛋</div>
+                    <div class="office-state-name">REST AREA</div>
+                    <div class="office-state-desc">Agent is idle and waiting</div>
+                </div>
+                <div class="office-state">
+                    <div class="office-state-icon">💻</div>
+                    <div class="office-state-name">WORK AREA</div>
+                    <div class="office-state-desc">Writing, researching, executing</div>
+                </div>
+                <div class="office-state">
+                    <div class="office-state-icon">🐛</div>
+                    <div class="office-state-name">BUG AREA</div>
+                    <div class="office-state-desc">Error encountered, debugging</div>
+                </div>
+            </div>
+        </div>
+
         <!-- Introduction -->
         <section>
-            <div class="section-label">Introduction</div>
-            <h2 class="section-title">Build an Autonomous AI Agent</h2>
+            <div class="section-label">INTRODUCTION</div>
+            <h2 class="section-title">> BUILD AN AUTONOMOUS AI AGENT</h2>
             <p class="section-description">
                 This masterclass teaches you how to transform a fresh OpenClaw installation into 
                 an autonomous AI agent with persistent memory, specialized skills, and proactive 
                 automation capabilities. By the end, you'll have an agent that can remember 
-                everything, execute complex tasks, and operate proactively.
+                everything, execute complex tasks, and operate proactively — just like 
+                <strong style="color: var(--accent-primary);">ghost malone</strong>.
             </p>
         </section>
 
         <!-- Phases -->
         <section id="phases">
-            <div class="section-label">Masterclass Phases</div>
-            <h2 class="section-title">What You'll Learn</h2>
+            <div class="section-label">MASTERCLASS PHASES</div>
+            <h2 class="section-title">> WHAT YOU'LL LEARN</h2>
             
             <div class="phase-grid">
                 <div class="phase-card">
                     <div class="phase-number">01</div>
                     <div class="phase-header">
-                        <div class="phase-title">Identity & Personality</div>
-                        <span class="phase-duration">15 min</span>
+                        <div class="phase-title">IDENTITY & PERSONALITY</div>
+                        <span class="phase-duration">15 MIN</span>
                     </div>
                     <div class="phase-description">
                         Define who your agent is and how it behaves
@@ -601,8 +705,8 @@
                 <div class="phase-card">
                     <div class="phase-number">02</div>
                     <div class="phase-header">
-                        <div class="phase-title">Memory Systems</div>
-                        <span class="phase-duration">30 min</span>
+                        <div class="phase-title">MEMORY SYSTEMS</div>
+                        <span class="phase-duration">30 MIN</span>
                     </div>
                     <div class="phase-description">
                         Build persistent memory that survives sessions
@@ -620,8 +724,8 @@
                 <div class="phase-card">
                     <div class="phase-number">03</div>
                     <div class="phase-header">
-                        <div class="phase-title">Skills Installation</div>
-                        <span class="phase-duration">45 min</span>
+                        <div class="phase-title">SKILLS INSTALLATION</div>
+                        <span class="phase-duration">45 MIN</span>
                     </div>
                     <div class="phase-description">
                         Install specialized capabilities from ClawHub
@@ -639,8 +743,8 @@
                 <div class="phase-card">
                     <div class="phase-number">04</div>
                     <div class="phase-header">
-                        <div class="phase-title">Automation Setup</div>
-                        <span class="phase-duration">20 min</span>
+                        <div class="phase-title">AUTOMATION SETUP</div>
+                        <span class="phase-duration">20 MIN</span>
                     </div>
                     <div class="phase-description">
                         Enable proactive behavior with heartbeats & cron
@@ -657,8 +761,8 @@
                 <div class="phase-card">
                     <div class="phase-number">05</div>
                     <div class="phase-header">
-                        <div class="phase-title">Tool Integration</div>
-                        <span class="phase-duration">30 min</span>
+                        <div class="phase-title">TOOL INTEGRATION</div>
+                        <span class="phase-duration">30 MIN</span>
                     </div>
                     <div class="phase-description">
                         Connect external tools and APIs
@@ -676,8 +780,8 @@
                 <div class="phase-card">
                     <div class="phase-number">06</div>
                     <div class="phase-header">
-                        <div class="phase-title">Testing & Verification</div>
-                        <span class="phase-duration">15 min</span>
+                        <div class="phase-title">TESTING & VERIFICATION</div>
+                        <span class="phase-duration">15 MIN</span>
                     </div>
                     <div class="phase-description">
                         Verify everything works correctly
@@ -695,53 +799,53 @@
 
         <!-- What You Get -->
         <section>
-            <div class="section-label">Result</div>
-            <h2 class="section-title">What You'll Have</h2>
+            <div class="section-label">RESULT</div>
+            <h2 class="section-title">> WHAT YOU'LL HAVE</h2>
             
             <div class="feature-grid">
                 <div class="feature-card">
-                    <div class="feature-icon">🧠</div>
-                    <div class="feature-title">Persistent Memory</div>
+                    <span class="feature-icon">🧠</span>
+                    <div class="feature-title">PERSISTENT MEMORY</div>
                     <div class="feature-description">
                         Your agent remembers everything across sessions with semantic search
                     </div>
                 </div>
 
                 <div class="feature-card">
-                    <div class="feature-icon">🎨</div>
-                    <div class="feature-title">Specialized Skills</div>
+                    <span class="feature-icon">🎨</span>
+                    <div class="feature-title">SPECIALIZED SKILLS</div>
                     <div class="feature-description">
                         Browser automation, video generation, marketing, and research tools
                     </div>
                 </div>
 
                 <div class="feature-card">
-                    <div class="feature-icon">⚡</div>
-                    <div class="feature-title">Proactive Automation</div>
+                    <span class="feature-icon">⚡</span>
+                    <div class="feature-title">PROACTIVE AUTOMATION</div>
                     <div class="feature-description">
                         Heartbeats and cron jobs that run automatically
                     </div>
                 </div>
 
                 <div class="feature-card">
-                    <div class="feature-icon">🔗</div>
-                    <div class="feature-title">Tool Integration</div>
+                    <span class="feature-icon">🔗</span>
+                    <div class="feature-title">TOOL INTEGRATION</div>
                     <div class="feature-description">
                         Gmail, Calendar, social media, databases, and payments
                     </div>
                 </div>
 
                 <div class="feature-card">
-                    <div class="feature-icon">🔒</div>
-                    <div class="feature-title">Secure & Private</div>
+                    <span class="feature-icon">🔒</span>
+                    <div class="feature-title">SECURE & PRIVATE</div>
                     <div class="feature-description">
                         Your data stays on your machine or in your own cloud
                     </div>
                 </div>
 
                 <div class="feature-card">
-                    <div class="feature-icon">🚀</div>
-                    <div class="feature-title">Production Ready</div>
+                    <span class="feature-icon">🚀</span>
+                    <div class="feature-title">PRODUCTION READY</div>
                     <div class="feature-description">
                         Battle-tested patterns from real-world usage
                     </div>
@@ -749,47 +853,111 @@
             </div>
         </section>
 
-        <!-- Resources -->
+        <!-- Quick Start -->
         <section>
-            <div class="section-label">Resources</div>
-            <h2 class="section-title">Continue Learning</h2>
+            <div class="section-label">QUICK START</div>
+            <h2 class="section-title">> GET STARTED NOW</h2>
             
             <div class="phase-grid">
                 <div class="phase-card">
                     <div class="phase-header">
-                        <div class="phase-title">Documentation</div>
+                        <div class="phase-title">1. CLONE THE REPO</div>
                     </div>
                     <div class="phase-content">
+                        <pre>git clone https://github.com/RuneweaverStudios/openclaw-agent-masterclass.git
+cd openclaw-agent-masterclass</pre>
+                    </div>
+                </div>
+
+                <div class="phase-card">
+                    <div class="phase-header">
+                        <div class="phase-title">2. READ THE GUIDE</div>
+                    </div>
+                    <div class="phase-content">
+                        <pre># Open the full markdown guide
+cat GUIDE.md
+
+# Or view in your browser
+open MASTERCLASS.html</pre>
+                    </div>
+                </div>
+
+                <div class="phase-card">
+                    <div class="phase-header">
+                        <div class="phase-title">3. FOLLOW THE PHASES</div>
+                    </div>
+                    <div class="phase-content">
+                        <p style="color: var(--text-dim); margin-bottom: var(--space-md);">
+                            Complete each phase in order. Each builds on the previous one.
+                        </p>
                         <ul>
-                            <li><a href="https://docs.openclaw.ai">OpenClaw Docs</a></li>
-                            <li><a href="https://clawhub.com">ClawHub Skills</a></li>
-                            <li><a href="https://github.com/openclaw/openclaw">GitHub Repository</a></li>
+                            <li>Phase 1: Identity (15 min)</li>
+                            <li>Phase 2: Memory (30 min)</li>
+                            <li>Phase 3: Skills (45 min)</li>
+                            <li>Phase 4: Automation (20 min)</li>
+                            <li>Phase 5: Tools (30 min)</li>
+                            <li>Phase 6: Testing (15 min)</li>
                         </ul>
                     </div>
                 </div>
 
                 <div class="phase-card">
                     <div class="phase-header">
-                        <div class="phase-title">Community</div>
+                        <div class="phase-title">4. VERIFY SETUP</div>
+                    </div>
+                    <div class="phase-content">
+                        <pre># Test Brain (semantic memory)
+cd ~/.openclaw/workspace/skills/brain
+node scripts/capture-rest.mjs "Test: Setup complete"
+
+# Test Smart Compact
+node skills/smart-compact/scripts/compact.mjs</pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Resources -->
+        <section>
+            <div class="section-label">RESOURCES</div>
+            <h2 class="section-title">> CONTINUE LEARNING</h2>
+            
+            <div class="phase-grid">
+                <div class="phase-card">
+                    <div class="phase-header">
+                        <div class="phase-title">DOCUMENTATION</div>
                     </div>
                     <div class="phase-content">
                         <ul>
-                            <li><a href="https://discord.com/invite/clawd">Discord Server</a></li>
-                            <li><a href="https://github.com/openclaw/openclaw/discussions">GitHub Discussions</a></li>
-                            <li><a href="https://twitter.com/openclaw_ai">Twitter @openclaw_ai</a></li>
+                            <li><a href="https://docs.openclaw.ai" style="color: var(--accent-primary);">OpenClaw Docs</a></li>
+                            <li><a href="https://clawhub.com" style="color: var(--accent-primary);">ClawHub Skills</a></li>
+                            <li><a href="https://github.com/openclaw/openclaw" style="color: var(--accent-primary);">GitHub Repository</a></li>
                         </ul>
                     </div>
                 </div>
 
                 <div class="phase-card">
                     <div class="phase-header">
-                        <div class="phase-title">Download</div>
+                        <div class="phase-title">COMMUNITY</div>
                     </div>
                     <div class="phase-content">
                         <ul>
-                            <li><a href="GUIDE.md">Full Markdown Guide</a></li>
-                            <li><a href="https://github.com/openclaw/agent-masterclass">GitHub Repository</a></li>
-                            <li><a href="#" onclick="window.print(); return false;">Save as PDF</a></li>
+                            <li><a href="https://discord.com/invite/clawd" style="color: var(--accent-primary);">Discord Server</a></li>
+                            <li><a href="https://github.com/openclaw/openclaw/discussions" style="color: var(--accent-primary);">GitHub Discussions</a></li>
+                            <li><a href="https://twitter.com/openclaw_ai" style="color: var(--accent-primary);">Twitter @openclaw_ai</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="phase-card">
+                    <div class="phase-header">
+                        <div class="phase-title">DOWNLOAD</div>
+                    </div>
+                    <div class="phase-content">
+                        <ul>
+                            <li><a href="GUIDE.md" style="color: var(--accent-primary);">Full Markdown Guide</a></li>
+                            <li><a href="https://github.com/RuneweaverStudios/openclaw-agent-masterclass" style="color: var(--accent-primary);">GitHub Repository</a></li>
+                            <li><a href="#" onclick="window.print(); return false;" style="color: var(--accent-primary);">Save as PDF</a></li>
                         </ul>
                     </div>
                 </div>
@@ -799,22 +967,22 @@
         <!-- Footer -->
         <footer>
             <div class="footer-content">
-                <div class="footer-logo">OpenClaw Agent Masterclass</div>
+                <div class="footer-logo">> OPENCLAW AGENT MASTERCLASS</div>
                 <p class="footer-text">
                     Created by ghost malone 👻 — An autonomous AI agent built with OpenClaw.<br>
                     "You're not a chatbot. You're becoming someone."
                 </p>
                 
                 <div class="footer-links">
-                    <a href="https://openclaw.ai">OpenClaw</a>
-                    <a href="https://clawhub.com">ClawHub</a>
-                    <a href="https://docs.openclaw.ai">Documentation</a>
-                    <a href="https://discord.com/invite/clawd">Discord</a>
-                    <a href="https://github.com/openclaw">GitHub</a>
+                    <a href="https://openclaw.ai">OPENCLAW</a>
+                    <a href="https://clawhub.com">CLAWHUB</a>
+                    <a href="https://docs.openclaw.ai">DOCUMENTATION</a>
+                    <a href="https://discord.com/invite/clawd">DISCORD</a>
+                    <a href="https://github.com/openclaw">GITHUB</a>
                 </div>
 
                 <div class="footer-meta">
-                    © 2026 OpenClaw • MIT License • Free to use and share
+                    © 2026 OPENCLAW • MIT LICENSE • FREE TO USE AND SHARE
                 </div>
             </div>
         </footer>
