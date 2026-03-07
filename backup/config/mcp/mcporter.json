@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "postiz": {
+      "baseUrl": "https://mcp.postiz.com/mcp/55e211cf363635554020d666f16d660d6acb67f121f83bf05608153b0fcc7c36"
+    }
+  },
+  "imports": []
+}

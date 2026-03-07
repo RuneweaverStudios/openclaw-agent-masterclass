@@ -1,0 +1,20 @@
+{
+  "name": "brain",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "setup": "node scripts/setup.mjs",
+    "capture": "node scripts/capture.mjs",
+    "search": "node scripts/search.mjs",
+    "recent": "node scripts/recent.mjs",
+    "migrate": "node scripts/migrate-to-supabase.mjs",
+    "test": "node scripts/capture.mjs 'Test memory: Brain is working!' --topics test --importance low && node scripts/recent.mjs 1 && node scripts/search.mjs test"
+  },
+  "keywords": ["brain", "memory", "semantic-search", "pgvector", "supabase"],
+  "author": "ghost malone",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.4.0",
+    "pg": "^8.12.0"
+  }
+}
