@@ -516,6 +516,58 @@
         .nav-item:hover { color: var(--text-2); }
         .nav-item.active { color: var(--text); border-bottom-color: var(--ghost); }
 
+        /* ── Skills Dropdown ── */
+        .nav-dropdown {
+            position: relative;
+        }
+
+        .nav-dropdown-toggle {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .nav-dropdown-toggle::after {
+            content: '▾';
+            font-size: 0.65em;
+            transition: transform 0.2s;
+        }
+
+        .nav-dropdown:hover .nav-dropdown-toggle::after {
+            transform: rotate(180deg);
+        }
+
+        .nav-dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.5rem 0;
+            min-width: 160px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+            z-index: 1000;
+            margin-top: 2px;
+        }
+
+        .nav-dropdown:hover .nav-dropdown-menu {
+            display: block;
+        }
+
+        .nav-dropdown-menu .nav-item {
+            display: block;
+            padding: 0.6rem 1rem;
+            border-bottom: none;
+        }
+
+        .nav-dropdown-menu .nav-item:hover {
+            background: var(--ghost-light);
+            color: var(--ghost);
+        }
+
         /* ── Divider ── */
         .divider {
             height: 1px;
@@ -639,9 +691,13 @@
         <div class="nav-inner">
             <a href="#origin" class="nav-item active">Origin</a>
             <a href="#memory" class="nav-item">Memory</a>
-            <a href="semantic-brain-setup.html" class="nav-item">Brain Setup</a>
-            <a href="friday-router.html" class="nav-item">Friday</a>
-            <a href="#skills" class="nav-item">Skills</a>
+            <div class="nav-dropdown">
+                <a href="#skills" class="nav-item nav-dropdown-toggle">Skills</a>
+                <div class="nav-dropdown-menu">
+                    <a href="semantic-brain-setup.html" class="nav-item">Brain Setup</a>
+                    <a href="friday-router.html" class="nav-item">Friday</a>
+                </div>
+            </div>
             <a href="#automation" class="nav-item">Automation</a>
             <a href="#tools" class="nav-item">Tools</a>
             <a href="#verify" class="nav-item">Verify</a>
