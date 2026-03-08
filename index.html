@@ -1128,19 +1128,22 @@ tail -f /tmp/smart-compact.log</div>
 
         <div class="g2">
             <div class="card">
-                <div class="card-head"><div class="card-title">What it does</div><span class="tag tag-ghost">Full Clone</span></div>
-                <div class="card-desc">Downloads and installs ghost malone's complete agent backup &mdash; all skills, config, scripts, and automation.</div>
+                <div class="card-head"><div class="card-title">What it does</div><span class="tag tag-ghost">Smart Merge</span></div>
+                <div class="card-desc">Merges with your existing setup — no destruction, all the goods. Installs OpenClaw fresh if needed.</div>
                 <ul class="card-list">
+                    <li><strong>Smart Merge</strong> &mdash; Installs new skills, preserves existing configs</li>
+                    <li><strong>Fresh OpenClaw</strong> &mdash; Installs via Homebrew (macOS) or npm (Linux) if missing</li>
                     <li><strong>23 skills</strong> &mdash; brain, smart-compact, charlie, playwright-pro, and more</li>
-                    <li><strong>10 config files</strong> &mdash; SOUL, IDENTITY, AGENTS, WORKFLOWS, SCHEDULE...</li>
-                    <li><strong>14 utility scripts</strong> &mdash; Stripe, waitlist, posting, calendar</li>
+                    <li><strong>10 config files</strong> &mdash; creates .example if file exists</li>
                     <li><strong>LaunchAgents</strong> &mdash; gateway + smart-compact automation (macOS)</li>
-                    <li><strong>npm install</strong> &mdash; auto-installs dependencies for skills that need them</li>
+                    <li><strong>BOOTSTRAP.md</strong> &mdash; step-by-step onboarding (delete when done)</li>
+                    <li><strong>npm install</strong> &mdash; auto-installs dependencies for new skills</li>
                 </ul>
             </div>
             <div class="card">
                 <div class="card-head"><div class="card-title">What you get</div><span class="tag tag-green">Everything</span></div>
                 <div class="code" style="font-size:0.7rem;"><span style="color:var(--text-3);">~/.openclaw/workspace/</span>
+BOOTSTRAP.md   <span style="color:var(--text-3);"># ← Start here (delete when done)</span>
 IDENTITY.md    <span style="color:var(--text-3);"># who your agent is</span>
 SOUL.md        <span style="color:var(--text-3);"># personality &amp; values</span>
 USER.md        <span style="color:var(--text-3);"># fill in your info</span>
@@ -1156,10 +1159,15 @@ memory/        <span style="color:var(--text-3);"># daily logs + archive</span><
         </div>
 
         <div class="card" style="margin-top:0.625rem;">
-            <div class="card-head"><div class="card-title">Or clone the repo</div><span class="tag tag-warm">Manual</span></div>
-            <div class="code">git clone https://github.com/RuneweaverStudios/openclaw-agent-masterclass.git
-cd openclaw-agent-masterclass
-cat GUIDE.md</div>
+            <div class="card-head"><div class="card-title">After install</div><span class="tag tag-warm">Onboarding</span></div>
+            <div class="code" style="font-size:0.75rem;"><span style="color:var(--text-3);"># Open the onboarding guide</span>
+cat ~/.openclaw/workspace/BOOTSTRAP.md
+
+<span style="color:var(--text-3);"># Complete setup, then delete the guide</span>
+rm ~/.openclaw/workspace/BOOTSTRAP.md
+
+<span style="color:var(--text-3);"># Start your first session</span>
+openclaw</div>
         </div>
     </section>
 
